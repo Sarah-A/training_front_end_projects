@@ -1,9 +1,10 @@
+
 :root {
     --main-background-color: #a3d5d3;
 }
 
 body {
-    padding: 5vw;
+    padding: 10vw;
     font-family: "KoHo", sans-serif;
     background-color: var(--main-background-color);    
 }
@@ -27,36 +28,39 @@ img {
     max-width: 100%;
     display: block;
     height: auto;
-
+    margin: auto;
 }
 
 .timeline-item {
     margin: 15px auto;
-    /* grid-area: info; */
 }
 
 .timeline-date {
     font-weight: bold;
-    /* grid-area: date; */
 }
 
+#img-div {
+    background: #dcefee;    
+    padding: 20px;
+    margin: 0px;
+}
 
 #img-caption {
     font-size: 85%;
     font-style: italic;
-    color: darkslategray;
+    color: rgb(27, 46, 46);
 
 }
 
-#tribute-info {
+/* #tribute-info {
     display: grid; 
     grid-template-columns: 100%;    
     justify-items: left; 
-}
+} */
 
-#timeline-headline {
-    text-align:center;
-    /* grid-area: header; */
+#timeline-headline {    
+    text-align: left;
+    padding-left: 35px;
 }
 
 #external-links {
