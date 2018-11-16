@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="styles/default.css">
+        <title>Survey Form</title>
+    </head>
+    <body>
+        <main>
+            <h1 id="title">Survey Form</h1>
+            <p id="description">Tell us what you think</p>
+            <form id="survey-form">
+                <label id="name-label" for="name">Name:</label>
+                <input type="text" id="name" name="name" placeholder="Enter Full Name" required>
+
+                <label id="email-label" for="email"> email:</label>
+                <input type="email" id="email" name="email" placeholder="Enter Email Address" required>
+
+                <label id="number-label" for="number">Age:</label>
+                <input type="number" id=number name="age" min="10" max="120" placeholder="Enter Age (10-120)">
+
+                <label id="dropdown-label" for="dropdown">Where did you hear about us?</label>
+                <select id="dropdown">
+                    <option value="search_engine">Search Engine</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="recommendation">Recommended by friends</option>
+                    <option value="other">Other</option>
+                </select>
+
+                <fieldset>
+                    <legend>Would do recommend us to your friends?</legend>
+
+                    <label id="recommend-yes-label" for="recommend-yes">Yes</label>
+                    <input id="recommend-yes" type="radio" name="recommend-radio" value="recommend_yes" checked>
+
+                    <label id="recommend-no-label" for="recommend-no">No</label>
+                    <input id="recommend-no" type="radio" name="recommend-radio" value="recommend_no">
+                    
+                    <label id="recommend-maybe-label" for="recommend-maybe">Not Sure</label>
+                    <input id="recommend-maybe" type="radio" name="recommend-radio" value="recommend_maybe">
+                </fieldset>
+
+                <fieldset>
+                    <legend>Choose which lists do you want to subscribe to:</legend>
+                    
+                    <input id="news" type="checkbox" name="subscriptions" value="subscription_news">
+                    <label id="news-label">News</label>
+                    
+                    <input id="promotions" type="checkbox" name="subscriptions" value="subscription_promotions">
+                    <label id="promotions-label">Promotions</label>
+                    
+                    <input id="specials" type="checkbox" name="subscriptions" value="subscription_specials">
+                    <label id="specials-label">Special Offers</label>
+                </fieldset>
+
+                <label id="comments-label" for="comments">Please add any additional comments below:</label>
+                <input id="comments" type="text" name="comments">
+
+                <button id="submit">Submit</button>
+            </form>
+
+
+        </main>
+
+    </body>
+</html>
