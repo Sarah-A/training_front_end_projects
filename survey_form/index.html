@@ -1,66 +1,117 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <link rel="stylesheet" href="styles/default.css">
-        <title>Survey Form</title>
-    </head>
-    <body>
-        <main>
+
+<head>
+    <meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/css?family=Harmattan" rel="stylesheet">
+    <link rel="stylesheet" href="styles/default.css">
+    <title>Survey Form</title>
+</head>
+
+<body>
+    <main>
+        <div class="form-title">
             <h1 id="title">Survey Form</h1>
+        </div>
+        <div class="form-description">
             <p id="description">Tell us what you think</p>
-            <form id="survey-form">
-                <label id="name-label" for="name">Name:</label>
-                <input type="text" id="name" name="name" placeholder="Enter Full Name" required>
+        </div>
+        <form id="survey-form">
+            <div class="form-item">
+                <div class="item-label">
+                    <label id="name-label" for="name">Name:</label>
+                </div>
+                <div class="item-input">
+                    <input type="text" class="question-input" id="name" name="name" placeholder="Enter Full Name"
+                        required>
+                </div>
+            </div>
 
-                <label id="email-label" for="email"> email:</label>
-                <input type="email" id="email" name="email" placeholder="Enter Email Address" required>
+            <div class="form-item">
+                <div class="item-label">
+                    <label class="question-label" id="email-label" for="email">Email:</label>
+                </div>
+                <div class="item-input">
+                    <input type="email" class="question-input" id="email" name="email" placeholder="Enter Email Address"
+                        required>
+                </div>
+            </div>
 
-                <label id="number-label" for="number">Age:</label>
-                <input type="number" id=number name="age" min="10" max="120" placeholder="Enter Age (10-120)">
+            <div class="form-item">
+                <div class="item-label">
+                    <label class="question-label" id="number-label" for="number">Age:</label>
+                </div>
+                <div class="item-input">
+                    <input type="number" id=number name="age" min="10" max="120" placeholder="Enter Age (10-120)">
+                </div>
+            </div>
 
-                <label id="dropdown-label" for="dropdown">Where did you hear about us?</label>
-                <select id="dropdown">
-                    <option value="search_engine">Search Engine</option>
-                    <option value="facebook">Facebook</option>
-                    <option value="recommendation">Recommended by friends</option>
-                    <option value="other">Other</option>
-                </select>
+            <div class="form-item">
+                <div class="item-label">
+                    <label class="question-label" id="dropdown-label" for="dropdown">Where did you hear about us?</label>
+                </div>
+                <div class="item-input">
+                    <select id="dropdown">
+                        <option value="search_engine">Search Engine</option>
+                        <option value="facebook">Facebook</option>
+                        <option value="recommendation">Recommended by friends</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
 
-                <fieldset>
-                    <legend>Would do recommend us to your friends?</legend>
+            <fieldset>
+                <div class="form-item">
+                    <div class="item-label">
+                        <legend class="question-label">How would you rate our service?</legend>
+                    </div>
+                    <div class="item-input">
+                        <input id="service-very-good" type="radio" name="service-very-good-radio" value="service_very_good"
+                            checked>
+                        <label id="service-very-good-label" for="service-very-good">Very Good</label><br>
 
-                    <label id="recommend-yes-label" for="recommend-yes">Yes</label>
-                    <input id="recommend-yes" type="radio" name="recommend-radio" value="recommend_yes" checked>
+                        <input id="service-ok" type="radio" name="service-ok-radio" value="service_ok">
+                        <label id="service-ok-label" for="service-ok">OK</label><br>
 
-                    <label id="recommend-no-label" for="recommend-no">No</label>
-                    <input id="recommend-no" type="radio" name="recommend-radio" value="recommend_no">
-                    
-                    <label id="recommend-maybe-label" for="recommend-maybe">Not Sure</label>
-                    <input id="recommend-maybe" type="radio" name="recommend-radio" value="recommend_maybe">
-                </fieldset>
+                        <input id="service-bad" type="radio" name="service-bad-radio" value="service_bad">
+                        <label id="service-bad-label" for="service-bad">Bad</label><br>
+                    </div>
+                </div>
+            </fieldset>
 
-                <fieldset>
-                    <legend>Choose which lists do you want to subscribe to:</legend>
-                    
-                    <input id="news" type="checkbox" name="subscriptions" value="subscription_news">
-                    <label id="news-label">News</label>
-                    
-                    <input id="promotions" type="checkbox" name="subscriptions" value="subscription_promotions">
-                    <label id="promotions-label">Promotions</label>
-                    
-                    <input id="specials" type="checkbox" name="subscriptions" value="subscription_specials">
-                    <label id="specials-label">Special Offers</label>
-                </fieldset>
+            <fieldset>
+                <div class="form-item">
+                    <div class="item-label">
+                        <legend class="question-label">Subscribe to our email lists:</legend>
+                    </div>
+                    <div class="item-input">
+                        <input id="news" type="checkbox" name="subscriptions" value="subscription_news" checked>
+                        <label id="news-label">News</label><br>
 
-                <label id="comments-label" for="comments">Please add any additional comments below:</label>
-                <input id="comments" type="text" name="comments">
+                        <input id="promotions" type="checkbox" name="subscriptions" value="subscription_promotions" checked>
+                        <label id="promotions-label">Promotions</label><br>
 
-                <button id="submit">Submit</button>
-            </form>
+                        <input id="specials" type="checkbox" name="subscriptions" value="subscription_specials" checked>
+                        <label id="specials-label">Special Offers</label><br>
+                    </div>
+                </div>
+            </fieldset>
 
+            <div class="form-item">
+                <div class="item-label">
+                    <label class="question-label" id="comments-label" for="comments">Please add any additional
+                        comments:</label>
+                </div>
+                <div class="item-input">
+                    <input id="comments" type="text" name="comments" placeholder="Enter your comments here...">
+                </div>
+            </div>
 
-        </main>
+            <div class="button-submit">
+                <button id="submit" accesskey="s">Submit</button>
+            </div>
+        </form>
+    </main>
+</body>
 
-    </body>
 </html>
