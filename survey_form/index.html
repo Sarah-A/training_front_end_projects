@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <main>
+    <main class="main">
         <div class="form-title">
             <h1 id="title">Survey Form</h1>
         </div>
@@ -39,10 +39,10 @@
 
             <div class="form-item">
                 <div class="item-label">
-                    <label class="question-label" id="number-label" for="number">Age:</label>
+                    <label class="question-label" id="number-label" for="number">Age (10-120):</label>
                 </div>
                 <div class="item-input">
-                    <input type="number" id=number name="age" min="10" max="120" placeholder="Enter Age (10-120)">
+                    <input type="number" id="number" name="age" min="10" max="120" placeholder="Enter Age">
                 </div>
             </div>
 
@@ -60,7 +60,7 @@
                 </div>
             </div>
 
-            <fieldset>
+            <fieldset class="form-radio-set">
                 <div class="form-item">
                     <div class="item-label">
                         <legend class="question-label">How would you rate our service?</legend>
@@ -79,7 +79,7 @@
                 </div>
             </fieldset>
 
-            <fieldset>
+            <fieldset class="form-checkbox-set">
                 <div class="form-item">
                     <div class="item-label">
                         <legend class="question-label">Subscribe to our email lists:</legend>
@@ -88,7 +88,8 @@
                         <input id="news" type="checkbox" name="subscriptions" value="subscription_news" checked>
                         <label id="news-label">News</label><br>
 
-                        <input id="promotions" type="checkbox" name="subscriptions" value="subscription_promotions" checked>
+                        <input id="promotions" type="checkbox" name="subscriptions" value="subscription_promotions"
+                            checked>
                         <label id="promotions-label">Promotions</label><br>
 
                         <input id="specials" type="checkbox" name="subscriptions" value="subscription_specials" checked>
@@ -103,11 +104,11 @@
                         comments:</label>
                 </div>
                 <div class="item-input">
-                    <input id="comments" type="text" name="comments" placeholder="Enter your comments here...">
+                    <textarea id="comments" rows="4" cols="40" name="comments">Enter your comments here...</textarea>
                 </div>
             </div>
 
-            <div class="button-submit">
+            <div class="form-button-submit">
                 <button id="submit" accesskey="s">Submit</button>
             </div>
         </form>

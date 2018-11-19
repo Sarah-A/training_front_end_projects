@@ -1,28 +1,126 @@
-*{outline: 1px solid red !important; }
+
+html {
+    --labels-color: hsl(160, 100%, 45%);
+}
 
 body {
     font-family: 'Harmattan', sans-serif;
     display: block;
+    font-size: 140%
 }
 
-.form-item {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-areas: 
-        "label input";
-    grid-gap: 0 2vw;
+.main {
+    margin: 3% 10%;
+    padding: 3% 0;
+    border: solid var(--labels-color);;
+    border-radius: 1%;
+    background-color: hsl(0, 0%, 97%);
+}
+
+.form-title {
+    color: var(--labels-color);
+    margin: auto 0 0 0;    
+}
+
+#title {
+    margin: 0;
+}
+
+.form-description {
+    color: var(--labels-color);
+    margin: 0;
+}
+
+#description {
+    margin: 0 auto 5% auto;
+}
+
+.form-item {    
+    padding: 2vw 0;    
 }
 
 .item-label {
-    grid-area: label;
-    justify-self: end;  
-
+    color: var(--labels-color);    
 }
 
-.item-input {
-    grid-area: input;
-    justify-self: start;
+.form-radio-set {
+    border: none;
+    padding-left: 0;
 }
+
+.form-checkbox-set {
+    border: none;
+    padding-left: 0;
+}
+
+#submit {
+    color: var(--labels-color);
+    padding: 1% 2%;
+    text-align: center;
+    font-size: 120%; 
+    border-color: var(--labels-color);
+    border-radius: 5%;
+    display: block; 
+    margin: auto;
+}
+
+#submit:hover {
+    font-weight: bold;
+    background-color: var(--labels-color);
+    color: white;
+}
+
+
+@media screen and (min-width: 800px)
+{
+    .form-title {
+        text-align: center;        
+    }
+
+    .form-description {
+        text-align: center;
+    }
+
+    .form-item {
+        display: grid;
+        grid-template-columns: 45% 55%;
+        grid-template-areas: 
+            "label input";
+        grid-gap: 0 1vw;
+    }
+
+    .item-label {
+        grid-area: label;
+        justify-self: end;  
+    }
+    
+    .item-input {
+        grid-area: input;
+        justify-self: start;
+    }
+
+    .form-button-submit {
+        margin: auto;
+    }
+
+    #submit {
+        margin: auto;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    
+    .main {
+        padding-left: 2%;
+    }
+
+    .item-input {
+        padding: 0 0 0 4%;
+    }
+}
+
+
+
 
 
 
