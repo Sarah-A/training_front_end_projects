@@ -1,15 +1,23 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <link rel="stylesheet" href="styles/default.css">
-        <title>Woodcraft</title>
-    </head>
-    <body>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/default.css">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Serif|Titillium+Web" rel="stylesheet">
+    <title>Woodcraft</title>
+</head>
+
+<body>
+    <div id="container">
         <header id="header">
-            <figure>
-                <img id="header-img" src="http://clipart-library.com/data_images/228175.png" alt="Woodcraft Logo">                
-            </figure>
+            <div class="header-logo">
+                <figure class="header-figure">
+                    <img id="header-img" src="http://clipart-library.com/data_images/228175.png" alt="Woodcraft Logo">
+                </figure>
+                <h1 id="h1">Woodcraft</h1>
+            </div>
             <nav id="nav-bar">
                 <a class="nav-link" href="#products">Products</a>
                 <a class="nav-link" href="#do-it-yourself">Do it Yourself</a>
@@ -18,10 +26,12 @@
         </header>
         <main>
             <section id="products">
-                <article id="pens">
+                <article class="article">
+                        <div class="article-products">
                     <h2>Pens</h2>
                     <figure>
-                        <img class="products-img" src="https://cdn.shortpixel.ai/client/q_glossy,ret_img,w_300/https://aussiepensnthings.com.au/wp-content/uploads/2018/11/PNF169A-300x300.jpg" alt="Handcrafted wooden pen">
+                        <img class="products-img" src="https://cdn.shortpixel.ai/client/q_glossy,ret_img,w_300/https://aussiepensnthings.com.au/wp-content/uploads/2018/11/PNF169A-300x300.jpg"
+                            alt="Handcrafted wooden pen">
                     </figure>
                     <ul id="pens-list">
                         <li>Bullet Pens</li>
@@ -29,34 +39,40 @@
                         <li>European Pens</li>
                     </ul>
                     <!-- Should be a link instead:  <button class="button" accesskey="p">Browse Pens</button> -->
+                    </div>
                 </article>
-                <article id="gifts">
-                        <h2>Gifts</h2>
-                        <figure>
-                            <img class="products-img" src="http://knysnawoodworkers.co.za/wp-content/uploads/2017/01/ksb001b-150x150.jpg" alt="Handcrafted wooden gifts">
-                        </figure>
-                        <ul id="gifts-list">
-                            <li>Office Accessories</li>
-                            <li>Dart Sets</li>
-                            <li>Letter Openers</li>
-                            <li>Bottle Stoppers</li>
-                            <li>Jewelry Boxes</li>
-                        </ul>
-                        <!-- Should be a link instead: <button class="button" accesskey="g">Browse Gifts</button> -->
-                    </article>
+                <article class="article">
+                    <div class="article-products">
+                    <h2>Gifts</h2>
+                    <figure>
+                        <img class="products-img" src="http://knysnawoodworkers.co.za/wp-content/uploads/2017/01/ksb001b-150x150.jpg"
+                            alt="Handcrafted wooden gifts">
+                    </figure>
+                    <ul id="gifts-list">
+                        <li>Office Accessories</li>
+                        <li>Dart Sets</li>
+                        <li>Letter Openers</li>
+                        <li>Bottle Stoppers</li>
+                        <li>Jewelry Boxes</li>
+                    </ul>
+                </div>
+                    <!-- Should be a link instead: <button class="button" accesskey="g">Browse Gifts</button> -->
+                </article>
             </section>
             <section id="do-it-yourself">
-                    <iframe id="video" width="560" height="315" src="https://www.youtube.com/embed/3pc-nnAykTQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-                    </iframe>
+                <iframe id="video" width="560" height="315" src="https://www.youtube.com/embed/3pc-nnAykTQ" frameborder="0"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+                </iframe>
             </section>
             <section id="mailing-list">
                 <form id="form" action="https://www.freecodecamp.com/email-submit" method="POST">
                     <label for="email">Join our mailing list to receive special offers and news:</label>
                     <input type="email" id="email" name="email" placeholder="Enter your e-mail address here" required>
-                    <input type="submit" id="submit" value="Subscribe"> 
+                    <input type="submit" id="submit" value="Subscribe">
                 </form>
             </section>
         </main>
+    </div>
+</body>
 
-    </body>
 </html>

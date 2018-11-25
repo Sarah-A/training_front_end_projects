@@ -1,6 +1,120 @@
-* {outline: 1px solid red !important;}
+* { outline: 1px solid red !important; }
 
-#nav-bar {
-    position: fixed;
-    top: 0;
+:root {   
+}
+
+body {
+    font-family: 'Titillium Web', sans-serif;
+    /* This was required so that the view port will not exceed the screen: */
+    width: 90vw;
+    margin: 5%;
+}
+
+section {
+    display: flex;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    display: flex;    
+}
+
+#header {
+    display: flex;
+    flex: 1 0 auto;
+    width: 90vw;
+    align-items: center;    
+    /* The following is needed in order to make the logo + navigation bar fixed at the top of the page */
+    position: fixed;    
+    top: 0;   
+    background-color: white;   
+}
+
+.header-logo {
+    display: flex;
+    flex: 1 0 auto;
+}
+
+.header-figure {
+    margin: auto 20px;
+}
+
+#header-img {
+    width: 120px;
+}
+
+#h1 {
+    font-family: 'Noto Serif', serif;
+}
+
+.article-products {
+    display: flex;
+    flex-direction: column;
+    align-items: center;    
+    width: 30vw;    
+}
+
+.products-img {
+    height: 150px; 
+    width: 150px;
+}
+
+#do-it-yourself {
+    margin: auto;
+}
+
+#mailing-list {
+    margin: auto;
+}
+
+@media screen and (min-width: 800px) {
+    #header {
+        
+        
+    }
+
+    #nav-bar {        
+        
+    }
+
+    #products {
+        display: flex;        
+        flex-direction: row;
+        justify-content: space-evenly;        
+    }
+
+
+    main {
+        margin-top: 100px;
+    }
+
+    .article-products {       
+        flex: 1 0 auto;
+    }
+
+}
+
+@media screen and (max-width: 800px) {
+    
+    #header {
+        display: flex;
+        flex: 1 0 auto;
+        flex-direction: column;
+
+    }
+
+    #nav-bar { 
+        display: flex;
+        flex-direction: column;       
+        
+    }
+
+    main {
+        margin-top: 150px;
+    }
+
 }
