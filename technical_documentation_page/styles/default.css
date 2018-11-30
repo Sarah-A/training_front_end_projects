@@ -1,0 +1,139 @@
+/* *{outline: 1px solid red !important} */
+
+* {
+    --nav-line-color: hsl(180, 25%, 20%);
+    --nav-hover-color: hsl(180, 25%, 80%);
+    --nav-h1-color: hsl(180, 25%, 25%);
+    --nav-link-color: hsl(180, 25%, 53%); 
+}
+
+html, body {
+    font-family: 'Roboto', sans-serif;
+
+
+}
+
+.container {
+    margin: 2vh 2vw; 
+    width: 90%;
+}
+
+#navbar {
+    position: fixed;
+    top: auto;   
+}
+
+
+.navbar-nav {
+    padding: 0;
+}
+
+.nav-h1 {
+    color: var(--nav-h1-color);
+}
+
+.nav-item {
+    list-style-type: none;    
+    margin: 0;
+    text-align: justify;
+    border-bottom: 1px solid var(--nav-line-color);
+}
+
+.nav-item:hover {
+    background-color: var(--nav-hover-color);
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--nav-link-color);
+}
+
+
+
+.section-p{
+    font-size: 0.9em;
+    padding: 0 2em;
+}
+
+.section-ul {
+    padding: 0 4em;
+}
+
+.section-li {
+    font-size: 0.9em;
+}
+
+.code {
+    display: block;
+    padding: 0 2em;
+}
+
+@media screen and (min-width: 800px)
+{  
+    
+    .container {
+        margin: 0;
+    }  
+    
+    #navbar {
+        width: 200px;
+        height: 100%;
+        border-right: 3px solid var(--nav-line-color);
+        overflow: auto;  
+    }
+
+    .nav-h1 {
+        padding-left: 20px;
+    }
+
+    .nav-item {
+        padding: 0.9em 20px;
+        font-size: 1.2em;
+    }
+
+    #main-doc {
+        margin: 5vh 2vw 0 215px; 
+        padding-top: 2vh;
+    }
+}
+ 
+@media screen and (max-width: 800px)
+{
+    
+    #navbar {
+        margin-top: 2vh;
+        padding: 2vh 2vw;         
+        background-color: white;    
+        width: 90%;
+        height: 200px;
+        border: 3px solid var(--nav-line-color);
+        border-radius: 5px;
+        top: 0;
+    }
+
+    .nav-h1 {
+        padding-left: 40vw;
+    }
+
+    .navbar-nav {
+        overflow: auto;    
+        height: 120px;    
+    }
+
+    .nav-item {
+        padding: 0.6em 0 0.6em 40vw;
+    }
+
+    #main-doc{
+        margin-top: 230px;     
+    }
+
+    :target:before {
+        content:"";
+        display:block;
+        height:230px; 
+        margin:-230px 0 0; 
+    }
+    
+
+}
