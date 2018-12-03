@@ -1,6 +1,9 @@
-# training_front_end_projects
+# front_end_projects
 
-This repository contains all the final projects I've done as part of my 'Responsive Web Design' Certification course by freeCodeCamp: https://www.freecodecamp.org/.
+This repository contains all the projects I've done while learning front end programing using:
+* HTML
+* CSS
+* Bootstrap
 
 See subfolders for the different projects.
 
