@@ -1,0 +1,39 @@
+* {
+    outline: 1px solid red !important;
+    --color-main: 
+}
+
+html, body {
+    font-family: 'Merriweather', serif;    
+}
+
+
+.navbar {
+    width: 100%;    
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;        
+}
+
+.navbar-item {
+    display: inline;
+    font-style: none;
+    margin: 0 2vw;
+
+}
+
+@media screen and (min-width: 601px)
+{
+    .navbar {
+        justify-content: flex-end;
+    }
+}
+
+@media screen and(max-width: 600px)
+{
+    .navbar {
+        justify-content: center;
+    }
+}
+
