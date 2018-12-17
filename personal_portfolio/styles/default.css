@@ -29,19 +29,16 @@ a:hover {
     display: grid;
     grid-template-columns: var(--sidebar-width) calc(100% - var(--sidebar-width) - var(--border-width));
     grid-template-areas: 
-        "contacts header"
         "contacts content";
     grid-gap: 0;
 }
 
-.header {
+#navbar {
     background-color: var(--background-color);
     position: fixed;
     width: 100%;  
     height: var(--header-height);  
-    padding: 5px 0;   
-    /* grid item: */
-    grid-area: header;
+    padding: 5px 0;       
 }
 
 nav {
