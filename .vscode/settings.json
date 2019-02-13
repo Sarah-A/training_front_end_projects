@@ -1,0 +1,6 @@
+{
+    "launch": {
+        "sourceMaps": true
+    },
+    "git.ignoreLimitWarning": true
+}
