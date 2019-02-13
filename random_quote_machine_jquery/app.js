@@ -15,10 +15,28 @@ const images = [
     "http://images.unsplash.com/photo-1491416658434-2dc561becd92?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjEyMDd9"
 ];
 
-function newQuote() {
-    $("body").css("background", `url(${images[1]}) no-repeat`);
-    $("#text").html(quotes[3].QUOTE);
-    $("#author").html(quotes[3].AUTHOR);
+const colors = ["#32CD32", "#20B2AA", "#B8860B", "#800000","#ff9900"];
+
+function randomInt(fromInt, toInt) {
+    return (Math.floor(Math.random() * (toInt - fromInt + 1)) + fromInt);    
 }
 
-$(document).ready(newQuote);
+function newRandomQuote() {    
+    const randomQuote = quotes[randomInt(0, quotes.length - 1)];
+    const randomImage = images[randomInt(0, images.length - 1)];
+    const randomColor = colors[randomInt(0, colors.length - 1)];
+       
+    $(".card-body").fadeOut(200, function() {        
+        $("#text").text(randomQuote.QUOTE);
+        $("#author").text(randomQuote.AUTHOR);
+        $("#quote-box").css("color", randomColor);
+        $(".blockquote-footer").css("color", randomColor);
+        $("button").css("background-color", randomColor);
+        $("fa-twitter").css("color", randomColor);
+        $("#tweet-quote").css("href", `href="https://twitter.com/intent/tweet"?text="${randomQuote.Quote}" ${randomQuote.AUTHOR}.`);
+        $(".card-body").fadeIn(200);
+    });
+}
+
+$(document).ready(newRandomQuote);
+
