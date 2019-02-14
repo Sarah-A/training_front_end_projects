@@ -3,6 +3,11 @@ html, body {
     width: 100vw;
 }
 
+.btn:focus {
+    outline: none;
+    box-shadow: none;
+}
+
 .container-fluid {
     background: url("https://images.unsplash.com/photo-1532274402911-5a369e4c4bb5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80") no-repeat;    
     background-size:cover;
@@ -12,3 +17,4 @@ html, body {
 #quote-box {
     max-width: 600px;
 }
+

@@ -2,21 +2,23 @@
 <html>
     <head>
         <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
         <link rel="stylesheet" href="styles/default.css">
         <title>Random Quote Machine</title>
     </head>
     <body>
         <div class="container-fluid h-100 w-100 d-flex flex-row justify-content-center align-items-center">
-            <div id="quote-box" class="card p-2">                
+            <div id="quote-box" class="card">                
                 <div class="card-body"> 
                     <blockquote class="blockquote text-center">
                         <i class="fas fa-quote-right pr-2"></i><span id="text"></span>
                         <footer class="blockquote-footer text-right" id="author"></footer>
                     </blockquote>
-                    <div class="d-flex flex-row justify-content-between">
-                        <a id="tweet-quote" class="twitter-share-button btn"><i class="fab fa-twitter fa-2x"></i></a>
+                    <div id="quote-buttons" class="d-flex flex-row justify-content-between">
+                        <a id="tweet-quote" class="twitter-share-button btn" target="_blank"><i class="fab fa-twitter fa-2x"></i></a>
                         <button class="btn text-white" id="new-quote" onclick="newRandomQuote()">New Quote</button>
                     </div>
                 </div>
@@ -24,6 +26,7 @@
         </div>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         <script src="app.js"></script>    
