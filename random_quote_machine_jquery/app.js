@@ -1,6 +1,10 @@
+"use strict";
+
 const QUOTE = "quote";
 const AUTHOR = "author";
 const WIKI_LINK = "wikiLink";
+const TWITTER_HREF = "https://twitter.com/intent/tweet";
+
 const quotes = [
     {QUOTE: "Life is 10% what happens to you and 90% how you react to it.", AUTHOR: "Charles R. Swindoll", WIKI_LINK: "https://en.wikipedia.org/wiki/Chuck_Swindoll"},
     {QUOTE: "For it was not into my ear that you whispered, but into my heart. It was not my lips you kissed, but my soul", AUTHOR: "Judy Garland", WIKI_LINK: "https://en.wikipedia.org/wiki/Judy_Garland"},
@@ -32,8 +36,8 @@ function newRandomQuote() {
         $("#quote-box").css("color", randomColor);
         $(".blockquote-footer").css("color", randomColor);
         $("button").css("background-color", randomColor);
-        $("fa-twitter").css("color", randomColor);
-        $("#tweet-quote").css("href", `href="https://twitter.com/intent/tweet"?text="${randomQuote.Quote}" ${randomQuote.AUTHOR}.`);
+        $("#tweet-quote").prop("href", `${TWITTER_HREF}?text="${randomQuote.QUOTE}". ${randomQuote.AUTHOR}.`);
+        $(".fa-twitter").css("color", randomColor);
         $(".card-body").fadeIn(200);
     });
 }
