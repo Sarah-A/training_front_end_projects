@@ -10,8 +10,17 @@ export function updateInput(input) {
     };
 }
 
+export function loadDefaultState() {
+    $.ajax({
+        url: "./src/js/store/default_input.txt",
+        success: function(input) {
+            store.dispatch(updateInput(input));
+        }
+    });
+}
+
 const defaultState = {
-    input: "#Header 1 \n ##Header 2 \n normal text :-)"
+    input: ""
 };
 
 function reducer(state = defaultState, action) {
@@ -24,6 +33,7 @@ function reducer(state = defaultState, action) {
 }
 
 export const store = createStore(reducer);
+loadDefaultState();
 
 export function mapStateToProps(state) {
     return {

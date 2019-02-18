@@ -15,9 +15,13 @@ export class EditorPanel extends React.Component {
 
     render() {
         return (
-            <textarea id="editor" className="p-3 panel-content" defaultValue={this.props.input} onChange={this.handleChange}></textarea>            
+            <textarea id="editor" className="p-3 panel-content" value={this.props.input} onChange={this.handleChange}></textarea>            
         );
     }
+
+    // componentWillMount() {
+    //     loadDefaultState();
+    // }
 }
 
 export const EditorContainer = connect(mapStateToProps, mapDispatchToProps)(EditorPanel);
