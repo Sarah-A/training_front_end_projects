@@ -1,23 +1,35 @@
 import React from 'react';
-import { ConnectPanelToStore } from "../store/store";
+import { connect } from "react-redux";
+import { mapStateToProps } from "../store/store";
+// import { marked } from "marked";
+
 
 export class PreviewPanel extends React.Component {
     constructor(props) {
         super(props);
 
+        this.markdownConverter = require('marked');
+
         this.markdownInput = this.markdownInput.bind(this);
     }
 
-    markdownInput() {
-        return this.props.input;
+    markdownInput() {        
+        return this.markdownConverter(this.props.input);
     }
 
     render() {
-        return (
-            <p>{this.markdownInput()}</p>
-        );
+        return null;
+    }
+
+    componentDidUpdate() {
+        document.getElementById("preview").innerHTML = this.markdownInput();
+    }
+
+    componentDidMount() {
+        document.getElementById("preview").innerHTML = this.markdownInput();
     }
 }
 
-export const PreviewContainer = ConnectPanelToStore(PreviewPanel);
+
+export const PreviewContainer = connect(mapStateToProps, null)(PreviewPanel);
 

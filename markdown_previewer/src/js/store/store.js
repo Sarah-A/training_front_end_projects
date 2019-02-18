@@ -15,24 +15,29 @@ const defaultState = {
 };
 
 function reducer(state = defaultState, action) {
-    return state;
+    switch (action.type) {
+        case UPDATE:
+            return {input: action.input};
+        default:
+            return state;
+    }
 }
 
 export const store = createStore(reducer);
 
-function mapStateToProps(state) {
+export function mapStateToProps(state) {
     return {
         input: state.input
     };
 }
 
-function mapDispatchToProps(dispatch) {
+export function mapDispatchToProps(dispatch) {
     return {
         updateInput: (input) => dispatch(updateInput(input))
     };
 }
 
-export const ConnectPanelToStore = connect(mapStateToProps, null);
+
 
 
 

@@ -1,5 +1,6 @@
 import React from 'react';
-import { ConnectPanelToStore} from "../store/store";
+import { mapStateToProps , mapDispatchToProps} from "../store/store";
+import {connect} from "react-redux";
 
 export class EditorPanel extends React.Component {
     constructor(props) {
@@ -8,17 +9,17 @@ export class EditorPanel extends React.Component {
     }
 
     handleChange(event) {
-        console.log("recognized Change in Editor Panel!!");
-        // TODO - Dispatch store update!!
+        console.log(`recognized Change in Editor Panel: ${event.target.value}`);
+        this.props.updateInput(event.target.value);
     }
 
     render() {
         return (
-            <textarea id="editor" className="p-3" defaultValue={this.props.input} onChange={this.handleChange()}></textarea>            
+            <textarea id="editor" className="p-3 panel-content" defaultValue={this.props.input} onChange={this.handleChange}></textarea>            
         );
     }
 }
 
-export const EditorContainer = ConnectPanelToStore(EditorPanel);
+export const EditorContainer = connect(mapStateToProps, mapDispatchToProps)(EditorPanel);
 
 
