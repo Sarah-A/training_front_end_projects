@@ -10,6 +10,12 @@ export class PreviewPanel extends React.Component {
 
         this.markdownConverter = require('marked');
 
+        this.markdownConverter.setOptions({
+            breaks: true,
+            gfm: true,
+            tables: true
+        });
+
         this.markdownInput = this.markdownInput.bind(this);
     }
 

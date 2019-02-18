@@ -12,43 +12,38 @@ html, body{
     max-height: 100%;
     width: 100vw;    
     max-width: 100%;
-    overflow: hidden;    
-    margin: 0;
-    width: 100%;
+    /* overflow: none;     */
+    margin: 0;    
 }
 
-#editor {
-    height: calc(100% - 6px);
-    width: 100%;
-    border: none;
-    overflow: hidden;
-    resize: none;
-}
 
 .panel {
-    border: 1px solid black;   
-    /* min-width: 150px;
-    min-height: 150px; */
-    
-    /* 
-    TODO: should be flexible according to panels setup on the screen */
-    /* max-height: 50vh;
-    max-width: 50vh;  */
+    border: 1px solid black;  
+    /* overflow: hidden;  */
+    height: 100%;
+    width: 100%;    
 }
 
 .panel-header {
     background-color: lightgray;
 }
 
-.panel-content {
-    height: 100%;
-    width: 100%; 
+.card-body {
     overflow: auto;
+}
+
+.panel-content {    
+    height: calc(100% - 6px);
+    width: 100%;
+    border: none;
+    overflow: hide;
+    resize: none;
 }
 
 #panels-wrapper {
     max-height: 90%;
     max-width: 99%;
+    overflow: hidden;
 }
 
 /* #editor-panel {
