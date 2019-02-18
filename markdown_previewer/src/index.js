@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from "react-dom";
 import {Provider, connect } from "react-redux";
-import Panels from './js/components/panels.jsx';
+import App from './js/components/App.jsx';
 import {store} from "./js/store/store";
 
 // $(".panel").draggable({
@@ -27,17 +27,10 @@ import {store} from "./js/store/store";
 // }
 
 
+render(
+    <Provider store={store}>
+        <App />
+    </Provider>, 
+    document.getElementById("app")
+);
 
-const panels = document.getElementById("main-wrapper");
-if(panels != undefined) {
-    console.log("Found panels!!");
-    render(
-        <Provider store={store}>
-            <Panels />
-        </Provider>, 
-        panels);    
-}
-else {
-    console.log("Couldn't find panels id!!!");
-}
-// panels ? ReactDOM.render(<h1>React Rendering is working!</h1>, panels) : console.log("Couldn't find panels id!!!");

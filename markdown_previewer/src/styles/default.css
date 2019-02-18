@@ -2,12 +2,12 @@
     border: 1px solid red !important;
 } */
 
-html, body {
+html, body{
     height: 100vh;
     width: 100vw;
 }
 
-.container {
+.container, #app {
     height: 100vh;
     max-height: 100%;
     width: 100vw;    
@@ -15,6 +15,14 @@ html, body {
     overflow: hidden;    
     margin: 0;
     width: 100%;
+}
+
+#editor {
+    height: calc(100% - 6px);
+    width: 100%;
+    border: none;
+    overflow: hidden;
+    resize: none;
 }
 
 .panel {
