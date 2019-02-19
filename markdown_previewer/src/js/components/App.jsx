@@ -1,7 +1,7 @@
 // src/js/components/App.jsx
 import React from "react";
-import { EditorContainer } from "./EditorPanel.jsx";
-import { PreviewContainer } from "./PreviewPanel.jsx";
+import { ConnectedEditor } from "./EditorPanel.jsx";
+import { ConnectedPreview } from "./PreviewPanel.jsx";
 
 
 const App = () => (
@@ -9,15 +9,13 @@ const App = () => (
         <div className="panel card col-12 col-lg-6 p-0">
             <div className="card-header">Editor</div>
             <div className="card-body p-0">
-                <EditorContainer />                
+                <ConnectedEditor />                
             </div>
         </div>
         <div className="panel card col-12 col-lg-6 p-0">
             <div className="card-header">Preview</div>
-            <div className="card-body p-3">
-            <p id="preview" className="panel-content">
-                <PreviewContainer />                
-            </p>            
+            <div className="card-body p-0">
+                <ConnectedPreview />                
             </div>
         </div>        
     </div>

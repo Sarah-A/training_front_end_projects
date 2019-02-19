@@ -2,28 +2,29 @@ import React from 'react';
 import { mapStateToProps , mapDispatchToProps} from "../store/store";
 import {connect} from "react-redux";
 
-export class EditorPanel extends React.Component {
+function Editor(props) {
+    return (
+        <textarea id="editor" className="p-3 panel-content" value={props.input} onChange={props.handleChange}></textarea> 
+    );
+}
+
+export class EditorContainer extends React.Component {
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
     }
 
     handleChange(event) {
-        console.log(`recognized Change in Editor Panel: ${event.target.value}`);
         this.props.updateInput(event.target.value);
     }
 
     render() {
         return (
-            <textarea id="editor" className="p-3 panel-content" value={this.props.input} onChange={this.handleChange}></textarea>            
+            <Editor input={this.props.input} handleChange={this.handleChange} />
         );
     }
-
-    // componentWillMount() {
-    //     loadDefaultState();
-    // }
 }
 
-export const EditorContainer = connect(mapStateToProps, mapDispatchToProps)(EditorPanel);
+export const ConnectedEditor = connect(mapStateToProps, mapDispatchToProps)(EditorContainer);
 
 

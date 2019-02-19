@@ -14,7 +14,6 @@ export class MarkdownParser {
         
         this.markdownRenderer = new this.markdownParser.Renderer();
         this.markdownRenderer.link = function(href, title, text) {
-            console.log(`in new renderer. href: ${href} , title: ${title} , text: ${text}`);
             return (`<a href=${href} target="_blank">${text}</a>`);
         };
 
