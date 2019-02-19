@@ -1,26 +1,12 @@
 import React from 'react';
 import { connect } from "react-redux";
 import { mapStateToProps } from "../store/store";
-// import { marked } from "marked";
-
+import { MarkdownParser } from "./MarkdownParser";
 
 export class PreviewPanel extends React.Component {
     constructor(props) {
         super(props);
-
-        this.markdownConverter = require('marked');
-
-        this.markdownConverter.setOptions({
-            breaks: true,
-            gfm: true,
-            tables: true
-        });
-
-        this.markdownInput = this.markdownInput.bind(this);
-    }
-
-    markdownInput() {        
-        return this.markdownConverter(this.props.input);
+        this.markdownParser = new MarkdownParser();
     }
 
     render() {
@@ -28,12 +14,11 @@ export class PreviewPanel extends React.Component {
     }
 
     componentDidUpdate() {
-        document.getElementById("preview").innerHTML = this.markdownInput();
+        // console.log(this.markdownParser.getMarkdownHtml(this.props.input));
+        document.getElementById("preview").innerHTML = this.markdownParser.getMarkdownHtml(this.props.input);
+        
     }
 
-    componentDidMount() {
-        document.getElementById("preview").innerHTML = this.markdownInput();
-    }
 }
 
 
