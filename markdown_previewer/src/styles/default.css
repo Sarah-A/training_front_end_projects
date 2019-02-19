@@ -46,10 +46,23 @@ html, body{
     overflow: hidden;
 }
 
-/* #editor-panel {
-    background-color: lightblue;
+blockquote {
+    margin-left: 10px;
+    padding-left: 2px;
+    border-left: 2px solid teal;
+    color: teal;
 }
 
-#preview-panel {
-    background-color: lightgreen;
-} */
+th, td {
+    border: 2px solid black;
+    padding: 10px;
+}
+
+pre, code {
+    background-color: #e6e6e6;
+    color: #000066;
+}
+
+a {
+    text-decoration: underline;
+}
