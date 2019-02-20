@@ -36,7 +36,6 @@ html, body{
     height: calc(100% - 6px);
     width: 100%;
     border: none;
-    overflow: hide;
     resize: none;
 }
 

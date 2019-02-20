@@ -1,7 +1,10 @@
 import React from 'react';
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { mapStateToProps } from "../store/store";
 import { MarkdownParser } from "./MarkdownParser";
+import { Panel } from "./Panel.jsx";
+
 
 class Preview extends React.Component {
 
@@ -10,9 +13,12 @@ class Preview extends React.Component {
     }
 
     render() {
-        return (
+        const previewContents = (
             <p id="preview" className="panel-content p-3">
-            </p> 
+            </p>
+        );
+
+        return (<Panel title="Preview" contents={previewContents} /> 
         );
     }
 
@@ -20,6 +26,10 @@ class Preview extends React.Component {
         document.getElementById("preview").innerHTML = this.props.markdownHtml;        
     }
 }
+
+Preview.propTypes = {
+    markdownHtml: PropTypes.string
+};
 
 export class PreviewContainer extends React.Component {
     constructor(props) {
@@ -38,6 +48,10 @@ export class PreviewContainer extends React.Component {
     }
 
 }
+
+PreviewContainer.propTypes = {
+    input: PropTypes.string
+};
 
 
 export const ConnectedPreview = connect(mapStateToProps, null)(PreviewContainer);
