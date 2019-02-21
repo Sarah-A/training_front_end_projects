@@ -5,7 +5,7 @@ import { ConnectedPreview } from "./PreviewPanel.jsx";
 
 
 const App = () => (
-    <div id="panels-wrapper" className="row h-100 w-100">
+    <div id="panels-wrapper" className="d-inline-flex flex-column flex-lg-row align-items-stretch h-100 w-100">
         <ConnectedEditor />                
         <ConnectedPreview />                      
     </div>

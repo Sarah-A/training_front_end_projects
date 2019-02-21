@@ -1,0 +1,232 @@
+const {createStore} = Redux;
+const {Provider, connect } = ReactRedux;
+const {PropTypes} = PropTypes;
+
+
+const defaultState = {
+    input: `
+# Welcome to my React Markdown Previewer!
+
+## This is a sub-heading...
+### And here's some other cool stuff:
+
+Heres some code, \`<div></div>\`, between 2 backticks.
+
+\`\`\`
+// this is multi-line code:
+
+function anotherExample(firstLine, lastLine) {
+if (firstLine == '\`\`\`' && lastLine == '\`\`\`') {
+    return multiLineCode;
+}
+}
+\`\`\`
+
+You can also make text **bold**... whoa!
+Or _italic_.
+Or... wait for it... **_both!_**
+And feel free to go crazy ~~crossing stuff out~~.
+
+There's also [links](https://www.freecodecamp.com), and
+> Block Quotes!
+
+And if you want to get really crazy, even tables:
+
+Wild Header | Crazy Header | Another Header?
+------------ | ------------- | ------------- 
+Your content can | be here, and it | can be here....
+And here. | Okay. | I think we get it.
+
+- And of course there are lists.
+- Some are bulleted.
+    - With different indentation levels.
+        - That look like this.
+
+
+1. And there are numbererd lists too.
+1. Use just 1s if you want! 
+1. But the list goes on...
+
+And here is an embedded picture:
+
+
+![React Logo w/ Text](https://goo.gl/Umyytc)
+    `
+};
+
+const UPDATE = "UPDATE";
+
+function updateInput(input) {
+    return {
+        type: UPDATE,
+        input
+    };
+}
+
+
+function reducer(state = defaultState, action) {
+    switch (action.type) {
+        case UPDATE:
+            return {input: action.input};
+        default:
+            return state;
+    }
+}
+
+const store = createStore(reducer);
+
+function mapStateToProps(state) {
+    return {
+        input: state.input
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        updateInput: (input) => dispatch(updateInput(input))
+    };
+}
+
+class MarkdownParser {
+    constructor() {
+
+        this.markdownParser = marked;
+        this.markdownParser.setOptions({
+            breaks: true           
+        });
+        
+        
+        this.markdownRenderer = new this.markdownParser.Renderer();
+        this.markdownRenderer.link = function(href, title, text) {
+            return (`<a href=${href} target="_blank">${text}</a>`);
+        };
+
+    };
+
+    getMarkdownHtml(text) {
+        return this.markdownParser(text, {renderer: this.markdownRenderer});
+    }
+}
+
+function Panel(props){
+    return (
+        <div className="panel card p-0">
+            <div className="card-header">{props.title}</div>
+            <div className="card-body p-0">
+                {props.contents}                
+            </div>
+        </div>
+    );
+}
+
+Panel.propTypes = {
+    title: PropTypes.string,
+    contents: PropTypes.object
+};
+
+class Preview extends React.Component {
+
+    constructor(props) {
+        super(props);
+    }
+
+    getDangerousMarkup() {
+        return {__html: this.props.markdownHtml};
+    }
+
+    render() {        
+        const previewContents = (
+            <p id="preview" className="panel-content p-3" dangerouslySetInnerHTML={this.getDangerousMarkup()}>
+            </p>
+        );
+
+        return (<Panel title="Preview" contents={previewContents} /> 
+        );
+    }
+    
+}
+
+Preview.propTypes = {
+    markdownHtml: PropTypes.string
+};
+
+class PreviewContainer extends React.Component {
+    constructor(props) {
+        super(props);
+        
+        this.markdownHtml = "";
+        this.markdownParser = new MarkdownParser();
+    }
+
+    render() {
+        this.markdownHtml = this.markdownParser.getMarkdownHtml(this.props.input);
+        // console.log(`In PreviewPanel:  ${this.markdownHtml}`);
+        return (           
+            <Preview markdownHtml={this.markdownHtml} /> 
+        );
+    }
+
+}
+
+PreviewContainer.propTypes = {
+    input: PropTypes.string
+};
+
+
+const ConnectedPreview = connect(mapStateToProps, null)(PreviewContainer);
+
+function Editor(props) {
+    const editorContents = (
+        <textarea id="editor" className="p-3 panel-content" value={props.input} onChange={props.handleChange}>            
+        </textarea>
+    );
+
+    return (
+        <Panel title="Editor" contents={editorContents} />         
+    );
+}
+
+Editor.propTypes = {
+    input: PropTypes.string,
+    handleChange: PropTypes.func
+};
+
+class EditorContainer extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(event) {
+        this.props.updateInput(event.target.value);
+    }
+
+    render() {
+        return (
+            <Editor input={this.props.input} handleChange={this.handleChange} />
+        );
+    }
+}
+
+EditorContainer.propTypes = {
+    input: PropTypes.string,
+    handleChange: PropTypes.func
+};
+
+const ConnectedEditor = connect(mapStateToProps, mapDispatchToProps)(EditorContainer);
+
+const App = () => (
+    <div id="panels-wrapper" className="d-inline-flex flex-column flex-lg-row align-items-stretch h-100 w-100">
+        <ConnectedEditor />                
+        <ConnectedPreview />                      
+    </div>
+);
+
+
+ReactDOM.render(
+    <Provider store={store}>
+        <App />
+    </Provider>, 
+    document.getElementById("app")
+);
+
