@@ -21,8 +21,10 @@ Once you're done, submit the URL to your working project with all its tests pass
 
 Improvements:
 * have Editor and Previewer split the screen and not small windows.
-* Allow the user to choose vertical or horizental
-* Scroll both windows together (?) - the user should see in the preview what they see in the editor. 
+* Have a resposive design using Bootstrap
+* Implemented both bonuses
 
-Use: 
-* React with Redux - on change
+Used: 
+* html, CSS, JavaScript
+* Bootstrap
+* React with Redux

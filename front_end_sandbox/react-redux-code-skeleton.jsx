@@ -81,6 +81,20 @@ render(
 );
 
 //--------------------------------------------------------------------
+//  HTML:
+//  The HTML will have a single "app" or "root" element that will contain
+//  the "App" content as defined above. 
+//--------------------------------------------------------------------
+<html>
+    .....
+    <div id="root">
+        {/* the content of the "root" element will be replaced by the 
+        react-generated content through the App component */}
+    </div>
+</html>
+
+
+//--------------------------------------------------------------------
 // mapStateToProps:
 // For every Container component that need to access the state:
 //--------------------------------------------------------------------
@@ -160,7 +174,10 @@ function Presentational1(props) {
 //--------------------------------------------------------------------
 const App = () => (
     ...
-        <Container1 />
-        <Container2 />
+        <ConnectedContainer1 />
+        <ConnectedContainer2 />
     ...
 );
+
+
+
