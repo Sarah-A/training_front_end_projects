@@ -22,72 +22,73 @@ class DrumsData {
         this.drumPads = new Map([
         [   "Q", 
             {
-                file: "https://s3.amazonaws.com/freecodecamp/drums/Chord_1.mp3",
+                clipName: "Chord_1",
                 display: "Chord 1"
             }
         ], 
         [   "W",
             {
-                file: "https://s3.amazonaws.com/freecodecamp/drums/Chord_2.mp3",
+                clipName: "Chord_2",
                 display: "Chord 2"
             }
         ], 
         [   "E",
             {
-                file: "https://s3.amazonaws.com/freecodecamp/drums/Chord_3.mp3",
+                clipName: "Chord_3",
                 display: "Chord 3"
             }
-        // ], 
-        // [    "A",
-        //     {
-        //         file: "",
-        //         display: ""
-        //     }
-        // ],
-        // [   "S",
-        //     {
-        //         file: "",
-        //         display: ""
-        //     }
-        // ],
-        // [   "D",
-        //     {
-        //         file: "",
-        //         display: ""
-        //     }
-        // ],
-        // [   "Z",
-        //     {
-        //         file: "",
-        //         display: ""
-        //     }
-        // ],
-        // [   "X", 
-        //     {  
-        //         file: "",
-        //         display: "" 
-        //     }
-        // ],
-        // [   "C", 
-        //     {  
-        //         file: "",
-        //         display: "" 
-        // }
+        ], 
+        [   "A",
+            {
+                clipName: "Give_us_a_light",
+                display: "Shaker"
+            }
+        ], 
+        [   "S",
+        {
+            clipName: "Dry_Ohh",
+            display: "Open HH"
+        }
+        ], 
+        [   "D",
+            {
+                clipName: "Bld_H1",
+                display: "Closed HH"
+            }
+        ], 
+        [   "Z",
+        {
+            clipName: "punchy_kick_1",
+            display: "Punchy Kick"
+        }
+        ], 
+        [   "X",
+        {
+            clipName: "side_stick_1",
+            display: "Side Stick"
+        }
+        ], 
+        [   "C",
+            {
+                clipName: "Brk_Snr",
+                display: "Snare"
+            }
         ]
         ]);
     }
 
-    pads() {
+    getPads() {
         console.log(this.drumPads);
         return Array.from(this.drumPads.keys());
     }
 
-    display(pad) {
-        return this.drumPads[pad].display;
+    getDisplay(pad) {
+        return (this.drumPads.has(pad)? this.drumPads.get(pad).display : "");
     }
 
-    audioFile(pad) {
-        return this.drumPads[pad].file;
+    getClipName(pad) {
+        console.log(`in getClipName. pad: ${pad}`);
+        return this.drumPads.get(pad).clipName;
     }
 
     
@@ -113,7 +114,6 @@ function reducer(state = defaultState, action) {
 
 const store = createStore(reducer);
 
-
 function mapStateToProps(state) {
     return {padKey: state.padKey};
 }
@@ -131,27 +131,54 @@ function mapDispatchToProps(dispath) {
 //      React componenets:                                                                                                      //
 //******************************************************************************************************************************//
 
+//---------------------------------------------------------------------
+// DrumPad
+//---------------------------------------------------------------------
 class DrumPad extends Component {
     constructor(props) {
         super(props);
+
+        this.clipName = this.props.drums.getClipName(this.props.padKey);
+        this.audioFile = `https://s3.amazonaws.com/freecodecamp/drums/${this.clipName}.mp3`;
 
         this.handlePress = this.handlePress.bind(this);
     }
 
     handlePress(event) {
         console.log(`in ${this.props.padKey}.handlePress()`);
+        
         this.props.pressPad(this.props.padKey);
+        this.audioElement.currentTime = 0;
+        this.audioElement.play();
     }
 
     render() {
         console.log(`in DrumPad.reder with: ${this.props.padKey}`);
         return (
-            <button type="button" className="drum-pad" onClick={this.handlePress}>{this.props.padKey}</button>
+            <button type="button" id={this.clipName} className="drum-pad" accessKey={this.props.padKey} onClick={this.handlePress}>{this.props.padKey}
+                <audio id={this.props.padKey} className="clip" type="audio/mp3" preload="auto" src={this.audioFile}>   
+                {this.clipName}.mp3                 
+                </audio>
+            </button>
         );        
+    }
+
+    componentDidMount() {
+        this.audioElement = document.getElementById(`${this.props.padKey}`);       
     }
 }
 
+$(window).keydown(function(e) {
+    const audioElement = $(`#${e.key.toUpperCase()}`);
+    // console.log(`in keydown with: ${e.key.toUpperCase()}`);
+    if(audioElement) {
+        audioElement.parent().click();
+    }
+});
 
+//---------------------------------------------------------------------
+// Display
+//---------------------------------------------------------------------
 class Display extends Component {
     constructor(props) {
         super(props);
@@ -160,7 +187,7 @@ class Display extends Component {
     render() {
         console.log(`in Display.reder with: ${this.props.padKey}`);
         return (
-            <p>{this.props.padKey}</p>
+            <p id="display">{this.props.drums.getDisplay(this.props.padKey)}</p>
     
         );
     }
@@ -169,6 +196,9 @@ class Display extends Component {
 const ConnectedDrumPad = connect(null, mapDispatchToProps)(DrumPad);
 const ConnectedDisplay = connect(mapStateToProps, null)(Display);
 
+//---------------------------------------------------------------------
+// App
+//---------------------------------------------------------------------
 class App extends Component {
     constructor(props) {
         super(props);
@@ -176,24 +206,23 @@ class App extends Component {
     }
 
     render() {
-        // const drumPadsComponents = Array.from( drumPads.entries(), ( [key,value]) => {
-        //     // console.log(`drum-pad: ${key}`);
-        //     return (<ConnectedDrumPad padKey={key} fileName={value.file} key={key}/>);
-        // });
-        const drumPadsComponents = this.drums.pads().map( (padKey) => <ConnectedDrumPad padKey={padKey} key={padKey}/>);
-
-        console.log(drumPadsComponents);
+        const drumPadsComponents = this.drums.getPads().map( (padKey) => {
+            // console.log(`App.render.map: padKey: ${padKey}`);
+            // console.log(`clipName: ${this.drums.getClipName(padKey)}`);
+            return <ConnectedDrumPad padKey={padKey} key={padKey} drums={this.drums}/>;
+        });
 
         return (
-        <div id="drum-machine">
-            Hello React :-)
+        <div id="drum-machine">            
             {drumPadsComponents}            
-            <ConnectedDisplay />
+            <ConnectedDisplay drums={this.drums}/>            
         </div>
         );
     }
 
 }
+
+
 
 
 //******************************************************************************************************************************//
