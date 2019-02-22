@@ -16,6 +16,11 @@ function PressPad(padKey) {
     };
 }
 
+//-----------------------------------------------------------------------------------------------------------
+// DrumsData should probably be connected to the store but since I didn't learn the backend yet,
+// I'm leaving it out now to simplify the solution.
+//-----------------------------------------------------------------------------------------------------------
+
 class DrumsData {
 
     constructor() {
@@ -94,18 +99,20 @@ class DrumsData {
     
 }
 
+const drumMachineData = new DrumsData();
 
 const defaultState = {
-    padKey: undefined
+    selectpadKey: undefined,
 };
 
 function reducer(state = defaultState, action) {
+    
     // console.log(`in reducer with: ${action.padKey}`);
     switch(action.type) {
         case PRESS_PAD:
             console.log(`in reducer new pad: ${action.padKey}`);
             return {
-                padKey: action.padKey
+                padKey: action.padKey,                
             };
         default:
             return state;
@@ -115,8 +122,11 @@ function reducer(state = defaultState, action) {
 const store = createStore(reducer);
 
 function mapStateToProps(state) {
-    return {padKey: state.padKey};
+    return {
+        padKey: state.padKey        
+    };
 }
+
 
 function mapDispatchToProps(dispath) {
     return {
@@ -138,7 +148,7 @@ class DrumPad extends Component {
     constructor(props) {
         super(props);
 
-        this.clipName = this.props.drums.getClipName(this.props.padKey);
+        this.clipName = drumMachineData.getClipName(this.props.padKey);
         this.audioFile = `https://s3.amazonaws.com/freecodecamp/drums/${this.clipName}.mp3`;
 
         this.handlePress = this.handlePress.bind(this);
@@ -187,42 +197,41 @@ class Display extends Component {
     render() {
         console.log(`in Display.reder with: ${this.props.padKey}`);
         return (
-            <p id="display">{this.props.drums.getDisplay(this.props.padKey)}</p>
+            <p id="display">{drumMachineData.getDisplay(this.props.padKey)}</p>
     
         );
     }
 }
 
-const ConnectedDrumPad = connect(null, mapDispatchToProps)(DrumPad);
-const ConnectedDisplay = connect(mapStateToProps, null)(Display);
+
 
 //---------------------------------------------------------------------
 // App
 //---------------------------------------------------------------------
 class App extends Component {
     constructor(props) {
-        super(props);
-        this.drums = new DrumsData();
+        super(props);        
     }
 
     render() {
-        const drumPadsComponents = this.drums.getPads().map( (padKey) => {
+        const drumPadsComponents = drumMachineData.getPads().map( (padKey) => {
             // console.log(`App.render.map: padKey: ${padKey}`);
             // console.log(`clipName: ${this.drums.getClipName(padKey)}`);
-            return <ConnectedDrumPad padKey={padKey} key={padKey} drums={this.drums}/>;
+            return <ConnectedDrumPad padKey={padKey} key={padKey} />;
         });
 
         return (
         <div id="drum-machine">            
             {drumPadsComponents}            
-            <ConnectedDisplay drums={this.drums}/>            
+            <ConnectedDisplay />            
         </div>
         );
     }
 
 }
 
-
+const ConnectedDrumPad = connect(null, mapDispatchToProps)(DrumPad);
+const ConnectedDisplay = connect(mapStateToProps, null)(Display);
 
 
 //******************************************************************************************************************************//
