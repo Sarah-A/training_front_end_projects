@@ -1,0 +1,42 @@
+// * { outline: 1px solid red;}
+
+$active-color: #ff8533;
+$background-color: #d9d9d9;
+$panel-background-color: #a6a6a6;
+
+#app {
+    height: 100vh;
+    width: 100vw;
+}
+
+#drum-machine {
+    border: 3px solid $active-color;
+    background-color: $background-color;
+    width: 70%;
+    min-height: 220px;    
+    margin: auto;
+}
+
+.drum-panel {
+    width: 320px;
+    height: 260px;
+    margin: 5%;
+}
+
+#display {
+    margin: auto;
+    width: 100%;
+    background-color: $panel-background-color;
+    text-align: center;    
+}
+
+.drum-pad {
+    height: 25%;
+    background-color: $panel-background-color;
+}
+
+.active-drum-pad {
+    background-color: $active-color;
+} 
+
+
