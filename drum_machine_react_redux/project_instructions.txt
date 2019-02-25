@@ -21,3 +21,12 @@ User Story #7: When a .drum-pad is triggered, a string describing the associated
 
 You can build your project by forking this CodePen pen. Or you can use this CDN link to run the tests in any environment you like: https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js
 Once you're done, submit the URL to your working project with all its tests passing.
+
+Future improvements:
+* add the rest of the controllers that appear in FCC app but not in the project's requirements.
+	I didn't implement them now due to lack of time (MVP). 
+
+Used: 
+* html, CSS, SASS, JavaScript
+* Bootstrap
+* React with Redux
