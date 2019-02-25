@@ -9,17 +9,24 @@ $panel-background-color: #a6a6a6;
     width: 100vw;
 }
 
+#drum-machine-title {
+    background-color: $active-color;
+    color: $background-color;
+}
+
 #drum-machine {
     border: 3px solid $active-color;
     background-color: $background-color;
-    width: 70%;
-    min-height: 220px;    
+    width: 70%;    
     margin: auto;
 }
 
-.drum-panel {
-    width: 320px;
+#drum-pads {
     height: 260px;
+    margin: 5%;
+}
+
+#drum-display {
     margin: 5%;
 }
 

@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { render } from "react-dom";
+import React from "react";
+import ReactDOM from "react-dom";
 import { Provider, connect } from "react-redux";
 import { createStore } from "redux";
 
@@ -144,7 +144,7 @@ function mapDispatchToProps(dispath) {
 //---------------------------------------------------------------------
 // DrumPad
 //---------------------------------------------------------------------
-class DrumPad extends Component {
+class DrumPad extends React.Component {
     constructor(props) {
         super(props);
 
@@ -152,20 +152,32 @@ class DrumPad extends Component {
         this.audioFile = `https://s3.amazonaws.com/freecodecamp/drums/${this.clipName}.mp3`;
 
         this.handlePress = this.handlePress.bind(this);
+        this.activatePad = this.activatePad.bind(this);
+        this.deactivatePad = this.deactivatePad.bind(this);
+    }
+
+    activatePad() {
+        $(this.buttonElement).addClass("active-drum-pad");
+    }
+
+    deactivatePad() {
+        $(this.buttonElement).removeClass("active-drum-pad");
     }
 
     handlePress(event) {
         console.log(`in ${this.props.padKey}.handlePress()`);
-        
+        this.activatePad();
         this.props.pressPad(this.props.padKey);
         this.audioElement.currentTime = 0;
         this.audioElement.play();
+        setTimeout(this.deactivatePad, 500);        
+        this.buttonElement.blur();
     }
 
     render() {
         console.log(`in DrumPad.reder with: ${this.props.padKey}`);
         return (
-            <button type="button" id={this.clipName} className="drum-pad" accessKey={this.props.padKey} onClick={this.handlePress}>{this.props.padKey}
+            <button type="button" id={this.clipName} className="badge badge-light shadow drum-pad col-3 m-1" accessKey={this.props.padKey} onClick={this.handlePress}>{this.props.padKey}
                 <audio id={this.props.padKey} className="clip" type="audio/mp3" preload="auto" src={this.audioFile}>   
                 {this.clipName}.mp3                 
                 </audio>
@@ -174,7 +186,8 @@ class DrumPad extends Component {
     }
 
     componentDidMount() {
-        this.audioElement = document.getElementById(`${this.props.padKey}`);       
+        this.audioElement = document.getElementById(this.props.padKey); 
+        this.buttonElement = document.getElementById(this.clipName);
     }
 }
 
@@ -182,6 +195,7 @@ $(window).keydown(function(e) {
     const audioElement = $(`#${e.key.toUpperCase()}`);
     // console.log(`in keydown with: ${e.key.toUpperCase()}`);
     if(audioElement) {
+        audioElement.parent().focus();
         audioElement.parent().click();
     }
 });
@@ -189,7 +203,7 @@ $(window).keydown(function(e) {
 //---------------------------------------------------------------------
 // Display
 //---------------------------------------------------------------------
-class Display extends Component {
+class Display extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -208,7 +222,7 @@ class Display extends Component {
 //---------------------------------------------------------------------
 // App
 //---------------------------------------------------------------------
-class App extends Component {
+class App extends React.Component {
     constructor(props) {
         super(props);        
     }
@@ -221,9 +235,16 @@ class App extends Component {
         });
 
         return (
-        <div id="drum-machine">            
-            {drumPadsComponents}            
-            <ConnectedDisplay />            
+        <div id="drum-machine" className="d-flex flex-column">       
+        <div id="drum-machine-title" className="h2 text-center">Drum Machine</div>
+        <div className="d-flex flex-column flex-lg-row align-items-center justify-content-around">
+            <div id="drum-pads" className="drum-panel row align-items-center justify-content-around w-100 w-lg-50">
+                {drumPadsComponents}            
+            </div>
+            <div id="drum-display" className="drum-panel row w-100 w-lg-50">
+                <ConnectedDisplay />            
+            </div>
+        </div>
         </div>
         );
     }
@@ -238,7 +259,7 @@ const ConnectedDisplay = connect(mapStateToProps, null)(Display);
 //      index.js
 //******************************************************************************************************************************//
 
-render(
+ReactDOM.render(
     <Provider store={store}>
         <App />
     </Provider>,
