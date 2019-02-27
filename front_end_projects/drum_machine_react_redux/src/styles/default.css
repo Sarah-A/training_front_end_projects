@@ -1,0 +1,33 @@
+#app {
+  height: 100vh;
+  width: 100vw; }
+
+#drum-machine-title {
+  background-color: #ff8533;
+  color: #d9d9d9; }
+
+#drum-machine {
+  border: 3px solid #ff8533;
+  background-color: #d9d9d9;
+  width: 70%;
+  margin: auto; }
+
+#drum-pads {
+  height: 260px;
+  margin: 5%; }
+
+#drum-display {
+  margin: 5%; }
+
+#display {
+  margin: auto;
+  width: 100%;
+  background-color: #a6a6a6;
+  text-align: center; }
+
+.drum-pad {
+  height: 25%;
+  background-color: #a6a6a6; }
+
+.active-drum-pad {
+  background-color: #ff8533; }
