@@ -29,4 +29,5 @@ Future improvements:
 Used: 
 * html, CSS, SASS, JavaScript
 * Bootstrap
+* JQuery
 * React with Redux

@@ -24,6 +24,9 @@ Improvements:
 * Have a resposive design using Bootstrap
 * Implemented both bonuses
 
+Future improvements:
+* allow pannels to be moved around like the tabs in VS Code. 
+
 Used: 
 * html, CSS, JavaScript
 * Bootstrap
