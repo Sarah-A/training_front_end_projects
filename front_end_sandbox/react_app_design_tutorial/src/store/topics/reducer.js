@@ -9,7 +9,7 @@ const topicsDefaultState = Immutable({
 });
 
 export function topicsReducer(state = topicsDefaultState, action) {
-    console.log(`In topicsReducer with action: ${JSON.stringify(action)}`);
+    // console.log(`In topicsReducer with action: ${JSON.stringify(action)}`);
     switch(action.type) {
         case types.TOPICS_FETCHED:
             // using seamless-immutable library:
@@ -62,6 +62,14 @@ export function getTopicsUrlArray(state) {
 
 export function getSelectedTopicsUrls(state) {
     return state.topics.selectedTopicsUrls;    
+}
+
+export function getSelectedTopicsByUrls(state) {
+    console.log(`getSelectedTopicsByUrls: `);
+    console.log(`selectedTopicsUrls: ${JSON.stringify(state.topics.selectedTopicsUrls)}`);
+    let selectedTopicsByUrls = _.mapValues(_.keyBy(state.topics.selectedTopicsUrls), (topicUrl) => state.topics.topicsByUrl[topicUrl]);
+    console.log(`Final selectedTopicsUrls: ${JSON.stringify(selectedTopicsByUrls)}`);
+    return selectedTopicsByUrls;
 }
 
 export function getSelectedTopicsUrlsMap(state) {

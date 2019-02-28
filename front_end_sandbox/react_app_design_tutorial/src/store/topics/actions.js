@@ -56,6 +56,7 @@ export function simulateFetchTopics() {
 // }
 
 export function selectTopic(selectedTopics, newTopicUrl) {    
+    console.log(`In selectTopic with newTopicUrl: ${newTopicUrl}`);
       if (_.indexOf(selectedTopics, newTopicUrl) !== -1) return;
       const newSelectedTopics = selectedTopics.length < 3 ?
         selectedTopics.concat(newTopicUrl) :
