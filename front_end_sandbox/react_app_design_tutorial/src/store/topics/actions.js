@@ -62,6 +62,13 @@ export function selectTopic(selectedTopics, newTopicUrl) {
         selectedTopics.slice(1).concat(newTopicUrl);
       return({ 
           type: types.TOPICS_SELECTED, 
-          selectedTopicUrls: newSelectedTopics  
+          selectedTopicsUrls: newSelectedTopics  
+    });
+}
+
+export function finalizeSelection() {
+    console.log("in topicsActions.finalizeSelection()")
+    return({
+        type: types.TOPIC_SELECTION_FINALIZED
     });
 }

@@ -4,11 +4,12 @@ import * as types from './actionTypes';
 
 const topicsDefaultState = Immutable({
     "topicsByUrl": undefined,
-    "selectedTopicUrls": []
+    "selectedTopicsUrls": [],
+    "selectionFinalized": false
 });
 
 export function topicsReducer(state = topicsDefaultState, action) {
-    console.log(`In topicsReducer with action: ${action}`);
+    console.log(`In topicsReducer with action: ${JSON.stringify(action)}`);
     switch(action.type) {
         case types.TOPICS_FETCHED:
             // using seamless-immutable library:
@@ -21,7 +22,11 @@ export function topicsReducer(state = topicsDefaultState, action) {
             //      });
         case types.TOPICS_SELECTED:
             return state.merge({
-                "selectedTopicUrls": action.selectedTopicUrls
+                "selectedTopicsUrls": action.selectedTopicsUrls
+            });
+        case types.TOPIC_SELECTION_FINALIZED:
+            return state.merge({
+              selectionFinalized: true
             });
         default:
             return state;
@@ -46,22 +51,27 @@ export function topicsReducer(state = topicsDefaultState, action) {
 // Passing through a selector will allow us to confine the refactoring to the reducer only.
 
 export function getTopicsByUrl(state) {
-    console.log(JSON.stringify(state));
+    // console.log(JSON.stringify(state));
     return state.topics.topicsByUrl;
 }
 
 export function getTopicsUrlArray(state) {
-    console.log(JSON.stringify(state));
+    // console.log(JSON.stringify(state));
     return _.keys(state.topics.topicsByUrl);
 }
 
 export function getSelectedTopicsUrls(state) {
-    return state.topics.selectedTopicUrls;    
+    return state.topics.selectedTopicsUrls;    
 }
 
 export function getSelectedTopicsUrlsMap(state) {
-    console.log(`In getSelectedTopicsUrlsMap with: ${state.topics.selectedTopicUrls}`);    
-    const selectedTopicUrtlsMap = _.keyBy(state.topics.selectedTopicUrls);
-    console.log(`selectedTopicUrtlsMap: ${JSON.stringify(selectedTopicUrtlsMap)}`);    
-    return selectedTopicUrtlsMap;
+    return _.keyBy(state.topics.selectedTopicsUrls);    
+}
+
+export function isTopicsSelectionValid(state) {
+    return state.topics.selectedTopicsUrls.length === 3;
+}
+
+export function isTopicsSelectionFinalized(state) {
+    return state.topics.selectionFinalized;
 }
