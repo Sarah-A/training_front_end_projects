@@ -1,3 +1,9 @@
+// For CodePen:
+// const {createStore, combineReducers, applyMiddleware} = Redux;
+// const {Provider, connect } = ReactRedux;
+// const thunk = ReduxThunk.default;
+
+// For PC Environment:
 import React from 'react';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider, connect } from 'react-redux';
@@ -142,7 +148,7 @@ class DisplayView extends React.Component {
     render() {        
         return (
             <div className="display">
-                <p id="display-accumulated text-muted">{this.props.accumulated}</p>
+                <p id="display-accumulated text-secondary">{this.props.accumulated}</p>
                 <p id="display-last">{this.props.lastInput}</p>
             </div>            
         );
@@ -297,6 +303,7 @@ class CalculatorInput extends React.Component {
     }
 
     handleOperationClick(operator) {
+        console.log(`${keyChar} Clicked!!`);
         this.props.dispatch(processNewOperator(operator));
     }
     
