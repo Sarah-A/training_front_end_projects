@@ -16,7 +16,9 @@ import Immutable from 'seamless-immutable';
 //-----------------------------------------------------------------------------
 // /src/store/calculator/actionTypes.js
 //-----------------------------------------------------------------------------
-const CALCULATE = 'calculator.CALCULATE'
+const UPDATE_LAST = 'calculator.UPDATE_LAST';
+const UPDATE_ACCUMULATED = 'calculator.UPDATE_ACCUMULATED';
+const CALCULATE = 'calculator.CALCULATE';
 
 
 //-----------------------------------------------------------------------------
@@ -39,7 +41,10 @@ function isOperation(key) {
     }
 }
 
-function processNewInput(newKey) {
+//---------------------------------------------------------------
+// Thunks:
+//---------------------------------------------------------------
+function processNewDigit(newKey) {
     return function(dispatch, getState){
         let lastInput = getLastInput(getState());     
         
@@ -59,6 +64,14 @@ function processNewInput(newKey) {
     }
 }
 
+function processNewOperator(operator) {
+    return function(dispatch, getState) {
+        dispatch({
+            type: UPDATE_ACCUMULATED
+        });
+    }
+}
+
 
 //-----------------------------------------------------------------------------
 // /src/store/calculator/reducer.js
@@ -71,6 +84,15 @@ const defaultCalculatorState = Immutable({
 
 function calculatorReducer(state = defaultCalculatorState, action) {
     switch(action.type) {
+        case UPDATE_LAST:
+            return state.merge({
+                lastInput: (state.lastInput + action.newChar)
+            });
+        case UPDATE_ACCUMULATED:
+            return state.merge({
+                accumulatedInput: (state.accumulatedInput + state.lastInput),
+                lastInput: ""
+            });
         case CALCULATE:
             return state.merge({
                 accumulatedInput: action.accumulatedInput,
@@ -85,11 +107,11 @@ function calculatorReducer(state = defaultCalculatorState, action) {
 //--------------------------------
 // Selectors:
 //--------------------------------
-function getFullInput(state) {
+function getAccumulatedForDisplay(state) {
     return (state.calculator.accumulatedInput + state.calculator.lastInput);
 }
 
-function getResultForDisplay(state) {    
+function getLastForDisplay(state) {    
     if( (state.calculator.accumulatedInput.length === 0) && 
         (state.calculator.lastInput.length === 0)) {
         return "0";
@@ -120,8 +142,8 @@ class DisplayView extends React.Component {
     render() {        
         return (
             <div className="display">
-                <p id="display-input">{this.props.fullInput}</p>
-                <p id="display-result">{this.props.result}</p>
+                <p id="display-accumulated text-muted">{this.props.accumulated}</p>
+                <p id="display-last">{this.props.lastInput}</p>
             </div>            
         );
     }
@@ -155,15 +177,15 @@ class CalculatorButton extends React.Component {
 class CalculatorDisplay extends React.Component {
     render() {
         return (
-            <DisplayView fullInput={this.props.fullInput} result={this.props.result} />
+            <DisplayView accumulated={this.props.accumulated} lastInput={this.props.lastInput} />
         );
     }
 }
 
 function mapStateToProps(state) {
     return {
-        fullInput: getFullInput(state),
-        result: getResultForDisplay(state)
+        accumulated: getAccumulatedForDisplay(state),
+        lastInput: getLastForDisplay(state)
     };
 }
 
@@ -179,7 +201,13 @@ class CalculatorInput extends React.Component {
 
     constructor(props) {
         super(props);
-        this.onClick = this.onClick.bind(this);
+        this.handleNumberClick = this.handleNumberClick.bind(this);
+        this.handleOperationClick = this.handleOperationClick.bind(this);
+        this.handleCalculate = this.handleCalculate.bind(this);
+        this.handleDecimalPoint = this.handleDecimalPoint.bind(this);
+        this.handleClearInput = this.handleClearInput.bind(this);
+        this.handleBackspace = this.handleBackspace.bind(this);
+
     }
 
     render() {
@@ -220,10 +248,14 @@ class CalculatorInput extends React.Component {
             // },
             // "=" : {
             //     ID: "equals"
-            // },
-            // "+" : {
-            //     ID: "add"
-            // },
+            // }
+        ];
+        const operationKeys = [
+            {
+                keyChar: "+",
+                id: "add",
+                display: "+"             
+            }//,
             // "-" : {
             //     ID: "subtract"
             // },
@@ -245,20 +277,36 @@ class CalculatorInput extends React.Component {
         ];
 
         const numberKeysElements = numberKeys.map( (key) => (
-            <CalculatorButton id={key.id} key={key.id} className="number-button" keyChar={key.keyChar} display={key.display} onClick={this.onClick} />
+            <CalculatorButton id={key.id} key={key.id} className="number-button" keyChar={key.keyChar} display={key.display} onClick={this.handleNumberClick} />
+        ));
+        const operationKeyElements = operationKeys.map( (key) => (
+            <CalculatorButton id={key.id} key={key.id} className="operation-button" keyChar={key.keyChar} display={key.display} onClick={this.handleOperationClick} />
         ));
 
         return (
             <div className="input-keys">
-                {numberKeysElements}    
+                {numberKeysElements}  
+                {operationKeyElements}  
             </div>
         );
     }
 
-    onClick(keyChar) {
+    handleNumberClick(keyChar) {
         console.log(`${keyChar} Clicked!!`);
-        this.props.dispatch(processNewInput(keyChar));
+        this.props.dispatch(processNewDigit(keyChar));
     }
+
+    handleOperationClick(operator) {
+        this.props.dispatch(processNewOperator(operator));
+    }
+    
+    handleCalculate() {}
+    
+    handleDecimalPoint() {}
+
+    handleClearInput() {}
+
+    handleBackspace() {}
 }
 
 const ConnectedInput = connect()(CalculatorInput);
