@@ -23,7 +23,7 @@ import Immutable from 'seamless-immutable';
 // /src/store/calculator/actionTypes.js
 //-----------------------------------------------------------------------------
 
-const CLEAR_LAST = 'calculator.CLEAR_LAST';
+const EMPTY_LAST = 'calculator.EMPTY_LAST';
 const UPDATE_LAST = 'calculator.UPDATE_LAST';
 const UPDATE_ACCUMULATED = 'calculator.UPDATE_ACCUMULATED';
 const UPDATE_RESULT = 'calculator.UPDATE_RESULT';
@@ -51,6 +51,15 @@ function isOperation(key) {
     }
 }
 
+function isDecimalNumber(numAsStr) {
+    if( numAsStr.indexOf(".") !== -1) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 //---------------------------------------------------------------
 // Actions' Creators:
 //---------------------------------------------------------------
@@ -66,16 +75,16 @@ function clearAll() {
     };
 }
 
-function ClearLast() {
+function emptyLast() {
     return {
-        type: CLEAR_LAST
+        type: EMPTY_LAST
     };
 }
 
-function updateLast(newKey) {
+function updateLast(key) {
     return { 
         type: UPDATE_LAST,
-        newChar: newKey 
+        newChar: key 
     };
 }
 
@@ -97,27 +106,25 @@ function accumulteResult() {
 //---------------------------------------------------------------
 
 
-function processNewDigit(newKey) {
+function processNewDigit(newInput) {
     return function(dispatch, getState){
         const lastState = getState();
         const lastInput = getLastInput(lastState);     
 
-        console.log(`In processNewDigit with: ${lastInput}, ${newKey}`);
+        console.log(`In processNewDigit with: ${lastInput}, ${newInput}`);
 
         if(isCalculationDone(lastState)) {
             dispatch(clearAll());
-            dispatch(ClearLast());
-        }        
-
-        if(lastInput === "0") {
-            dispatch(ClearLast());
+            dispatch(emptyLast());
         }
-        
-        if( isOperation(lastInput)) {
+        else if( isOperation(lastInput)) {
             dispatch(updateAccumulated());
         }
+        else if(lastInput === "0") {
+            dispatch(emptyLast());
+        }
         
-        dispatch(updateLast(newKey));
+        dispatch(updateLast(newInput));
     }
 }
 
@@ -126,15 +133,15 @@ function processDecimalPoint() {
         let lastInput = getLastInput(getState());
         let newInput = ".";
 
-        if(lastInput.indexOf(".") !== -1) {
+        if(isDecimalNumber(lastInput)) {
             return;
         }
 
-        if(Number(lastInput) === 0) {
-            newInput = "0.";
-            dispatch(ClearLast());
+        if(!isNumeric(lastInput) || (Number(lastInput) === 0)) {
+            newInput = "0.";            
         }
-        dispatch(updateLast(newInput));
+
+        dispatch(processNewDigit(newInput));
     }
 }
 
@@ -148,7 +155,7 @@ function processNewOperator(operator) {
             dispatch(updateAccumulated());
         }
         else if(isOperation(lastInput)) {
-            dispatch(ClearLast());
+            dispatch(emptyLast());
         }
         else if(isCalculationDone(getState())) {            
             dispatch(accumulteResult());
@@ -162,24 +169,24 @@ function processEqualKey() {
     return function(dispatch, getState) {
         let state = getState();
         const lastInput = getLastInput(state);
+        let inputToCalculate = getAccumulated(state); 
+
         if(isCalculationDone(state)) {            
             return;
         }
-        else 
-        {
-            let inputToCalculate = getAccumulated(state); 
-            if(isOperation(lastInput)) {
-                dispatch(ClearLast());
-            }
-            else {
-                inputToCalculate += lastInput;
-            }
-
-            console.log(`Calculate: ${inputToCalculate}`);
-            const result = eval(inputToCalculate);
-            console.log(`In process calculate. result = ${result}`);
-            dispatch(updateResult(result));
+        
+        if(isOperation(lastInput)) {
+            dispatch(emptyLast());
         }
+        else {
+            inputToCalculate += lastInput;
+        }
+
+        console.log(`Calculate: ${inputToCalculate}`);
+        const result = eval(inputToCalculate);
+        console.log(`In process calculate. result = ${result}`);
+        dispatch(updateResult(result));
+        
     }
 }
 
@@ -199,9 +206,11 @@ const defaultCalculatorState = Immutable({
     result: 0
 });
 
+
+
 function calculatorReducer(state = defaultCalculatorState, action) {
     switch(action.type) {
-        case CLEAR_LAST:
+        case EMPTY_LAST:
             return state.merge({
                 lastInput: ""
             })
@@ -237,6 +246,7 @@ function calculatorReducer(state = defaultCalculatorState, action) {
     }
 }
 
+
 //--------------------------------
 // Selectors:
 //--------------------------------
@@ -246,8 +256,6 @@ function getAccumulated(state) {
 }
 
 function getAccumulatedForDisplay(state) {    
-    console.log(`in getAccumulatedForDisplay with (${state.calculator.accumulatedInput.toString().length}): ${state.calculator.accumulatedInput}`);
-    console.log(typeof(state.calculator.accumulatedInput));
     if(isCalculationDone(state)) {
         return (state.calculator.accumulatedInput + "=" + state.calculator.result);
     }
@@ -293,7 +301,7 @@ class DisplayView extends React.Component {
     render() {        
         return (
             <div className="display">
-                <p id="display-accumulated text-secondary">{this.props.accumulated}</p>
+                <p id="display-accumulated">{this.props.accumulated}</p>
                 <p id="display-last">{this.props.lastInput}</p>
             </div>            
         );
@@ -361,6 +369,12 @@ class CalculatorInput extends React.Component {
 
     }
 
+    getButtonComponent(key, type, handler) {
+        return (
+        <CalculatorButton {...key} key={key.id} className={`${type}-button`} onClick={handler} />
+        );
+    }
+
     render() {
         const equalKey = {
             keyChar: "=",
@@ -372,6 +386,12 @@ class CalculatorInput extends React.Component {
             keyChar: "\0x7F" ,
             id: "clear_all",
             display: "AC"
+        };
+
+        const decimalPointKey = {
+            keyChar: "." ,
+            id: "decimal",
+            display: "."
         };
 
         const numberKeys = [
@@ -446,19 +466,18 @@ class CalculatorInput extends React.Component {
             // }         
         ];
 
-        const numberKeysElements = numberKeys.map( (key) => (
-            <CalculatorButton id={key.id} key={key.id} className="number-button" keyChar={key.keyChar} display={key.display} onClick={this.handleNumberClick} />
-        ));
-        const operationKeyElements = operationKeys.map( (key) => (
-            <CalculatorButton id={key.id} key={key.id} className="operation-button" keyChar={key.keyChar} display={key.display} onClick={this.handleOperationClick} />
-        ));
+        const numberKeysElements = numberKeys.map( (key) =>             
+                (this.getButtonComponent(key, "number", this.handleNumberClick)));
+        const operationKeyElements = operationKeys.map( (key) => 
+                (this.getButtonComponent(key, "operation", this.handleOperationClick)));
 
         return (
             <div className="input-keys">
                 {numberKeysElements}  
+                {this.getButtonComponent(decimalPointKey, "decimal", this.handleDecimalPoint)}
                 {operationKeyElements}  
-                <CalculatorButton id={equalKey.id} key={equalKey.id} className="equal-button" keyChar={equalKey.keyChar} display={equalKey.display} onClick={this.handleEqualClick} />
-                <CalculatorButton id={clearAllKey.id} key={clearAllKey.id} className="clear-button" keyChar={clearAllKey.keyChar} display={clearAllKey.display} onClick={this.handleClearAll} />
+                {this.getButtonComponent(equalKey, "equal", this.handleEqualClick)}
+                {this.getButtonComponent(clearAllKey, "cler", this.handleClearAll)}
             </div>
         );
     }
@@ -477,7 +496,9 @@ class CalculatorInput extends React.Component {
         this.props.dispatch(processEqualKey());        
     }
     
-    handleDecimalPoint() {}
+    handleDecimalPoint() {
+        this.props.dispatch(processDecimalPoint());
+    }
 
     handleClearAll() {
         this.props.dispatch(processClearAllKey());
