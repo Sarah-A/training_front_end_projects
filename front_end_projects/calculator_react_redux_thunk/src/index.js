@@ -22,9 +22,13 @@ import Immutable from 'seamless-immutable';
 //-----------------------------------------------------------------------------
 // /src/store/calculator/actionTypes.js
 //-----------------------------------------------------------------------------
+
+const CLEAR_LAST = 'calculator.CLEAR_LAST';
 const UPDATE_LAST = 'calculator.UPDATE_LAST';
 const UPDATE_ACCUMULATED = 'calculator.UPDATE_ACCUMULATED';
-const CALCULATE = 'calculator.CALCULATE';
+const UPDATE_RESULT = 'calculator.UPDATE_RESULT';
+const ACCUMULATE_RESULT = 'calculator.ACCUMULATE_RESULT';
+const CLEAR_ALL = 'calculator.CLEAR_ALL';
 
 
 //-----------------------------------------------------------------------------
@@ -48,33 +52,140 @@ function isOperation(key) {
 }
 
 //---------------------------------------------------------------
+// Actions' Creators:
+//---------------------------------------------------------------
+function updateAccumulated() {
+    return { 
+        type: UPDATE_ACCUMULATED 
+    };
+}
+
+function clearAll() {
+    return { 
+        type: CLEAR_ALL         
+    };
+}
+
+function ClearLast() {
+    return {
+        type: CLEAR_LAST
+    };
+}
+
+function updateLast(newKey) {
+    return { 
+        type: UPDATE_LAST,
+        newChar: newKey 
+    };
+}
+
+function updateResult(result) {
+    return {
+        type: UPDATE_RESULT,
+        result
+    };
+}
+
+function accumulteResult() {
+    return {
+        type: ACCUMULATE_RESULT
+    };
+}
+
+//---------------------------------------------------------------
 // Thunks:
 //---------------------------------------------------------------
+
+
 function processNewDigit(newKey) {
     return function(dispatch, getState){
-        let lastInput = getLastInput(getState());     
-        
-        if(isNumeric(newKey) && isNumeric(lastInput))
-        { 
-            lastInput = Number(lastInput + newKey).toString();                
+        const lastState = getState();
+        const lastInput = getLastInput(lastState);     
+
+        console.log(`In processNewDigit with: ${lastInput}, ${newKey}`);
+
+        if(isCalculationDone(lastState)) {
+            dispatch(clearAll());
+            dispatch(ClearLast());
+        }        
+
+        if(lastInput === "0") {
+            dispatch(ClearLast());
         }
-        // TODO:
-                
-        console.log(`In processNewInput with: ${lastInput}`);
-        dispatch({
-                type: CALCULATE, 
-                accumulatedInput: "",
-                lastInput: lastInput,
-                result: null
-        });
+        
+        if( isOperation(lastInput)) {
+            dispatch(updateAccumulated());
+        }
+        
+        dispatch(updateLast(newKey));
+    }
+}
+
+function processDecimalPoint() {
+    return function (dispatch, getState) {
+        let lastInput = getLastInput(getState());
+        let newInput = ".";
+
+        if(lastInput.indexOf(".") !== -1) {
+            return;
+        }
+
+        if(Number(lastInput) === 0) {
+            newInput = "0.";
+            dispatch(ClearLast());
+        }
+        dispatch(updateLast(newInput));
     }
 }
 
 function processNewOperator(operator) {
     return function(dispatch, getState) {
-        dispatch({
-            type: UPDATE_ACCUMULATED
-        });
+        const lastInput = getLastInput(getState());
+
+        console.log(`In processNewOperator with: ${lastInput}, ${operator}`);
+
+        if(isNumeric(lastInput)) {
+            dispatch(updateAccumulated());
+        }
+        else if(isOperation(lastInput)) {
+            dispatch(ClearLast());
+        }
+        else if(isCalculationDone(getState())) {            
+            dispatch(accumulteResult());
+        }
+        dispatch(updateLast(operator));
+        
+    }
+}
+
+function processEqualKey() {
+    return function(dispatch, getState) {
+        let state = getState();
+        const lastInput = getLastInput(state);
+        if(isCalculationDone(state)) {            
+            return;
+        }
+        else 
+        {
+            let inputToCalculate = getAccumulated(state); 
+            if(isOperation(lastInput)) {
+                dispatch(ClearLast());
+            }
+            else {
+                inputToCalculate += lastInput;
+            }
+
+            console.log(`Calculate: ${inputToCalculate}`);
+            const result = eval(inputToCalculate);
+            console.log(`In process calculate. result = ${result}`);
+            dispatch(updateResult(result));
+        }
+    }
+}
+
+function processClearAllKey() {
+    return function(dispatch, getState) {
+        dispatch(clearAll());
     }
 }
 
@@ -84,27 +195,43 @@ function processNewOperator(operator) {
 //-----------------------------------------------------------------------------
 const defaultCalculatorState = Immutable({
     accumulatedInput: "",
-    lastInput: "",
+    lastInput: "0",
     result: 0
 });
 
 function calculatorReducer(state = defaultCalculatorState, action) {
     switch(action.type) {
+        case CLEAR_LAST:
+            return state.merge({
+                lastInput: ""
+            })
         case UPDATE_LAST:
             return state.merge({
-                lastInput: (state.lastInput + action.newChar)
+                lastInput: state.lastInput + action.newChar
             });
         case UPDATE_ACCUMULATED:
             return state.merge({
                 accumulatedInput: (state.accumulatedInput + state.lastInput),
                 lastInput: ""
             });
-        case CALCULATE:
-            return state.merge({
-                accumulatedInput: action.accumulatedInput,
-                lastInput: action.lastInput,
+        case UPDATE_RESULT:
+            return state.merge({      
+                accumulatedInput: (state.accumulatedInput + state.lastInput),     
+                lastInput: "=",
                 result: action.result
             });
+        case ACCUMULATE_RESULT:
+            return state.merge({
+                accumulatedInput: state.result.toString(),
+                lastInput: "",
+                result: 0
+            })
+        case CLEAR_ALL:
+            return state.merge({
+                accumulatedInput: "",
+                lastInput: "0",
+                result: 0
+            })
         default:
             return state;
     }
@@ -113,25 +240,43 @@ function calculatorReducer(state = defaultCalculatorState, action) {
 //--------------------------------
 // Selectors:
 //--------------------------------
-function getAccumulatedForDisplay(state) {
-    return (state.calculator.accumulatedInput + state.calculator.lastInput);
+
+function getAccumulated(state) {
+    return state.calculator.accumulatedInput;
+}
+
+function getAccumulatedForDisplay(state) {    
+    console.log(`in getAccumulatedForDisplay with (${state.calculator.accumulatedInput.toString().length}): ${state.calculator.accumulatedInput}`);
+    console.log(typeof(state.calculator.accumulatedInput));
+    if(isCalculationDone(state)) {
+        return (state.calculator.accumulatedInput + "=" + state.calculator.result);
+    }
+    else if(state.calculator.accumulatedInput.length > 0) {
+        return (state.calculator.accumulatedInput + state.calculator.lastInput);
+    }
 }
 
 function getLastForDisplay(state) {    
-    if( (state.calculator.accumulatedInput.length === 0) && 
-        (state.calculator.lastInput.length === 0)) {
-        return "0";
+    
+    if(isCalculationDone(state)) {
+        return state.calculator.result;
     }
-    return state.calculator.lastInput;
+    else {
+        return state.calculator.lastInput;
+    }
 }
 
 function getLastInput(state) {
     return state.calculator.lastInput;
 }
 
-// function isCalculationDone(state) {
-//     return (state.calculator.result !== null);
+// function getResult(state) {
+//     return state.calculator.result;
 // }
+
+function isCalculationDone(state) {
+    return (state.calculator.lastInput === "=");
+}
 
 //-----------------------------------------------------------------------------
 // src/stor/reducers.js
@@ -209,14 +354,26 @@ class CalculatorInput extends React.Component {
         super(props);
         this.handleNumberClick = this.handleNumberClick.bind(this);
         this.handleOperationClick = this.handleOperationClick.bind(this);
-        this.handleCalculate = this.handleCalculate.bind(this);
+        this.handleEqualClick = this.handleEqualClick.bind(this);
         this.handleDecimalPoint = this.handleDecimalPoint.bind(this);
-        this.handleClearInput = this.handleClearInput.bind(this);
+        this.handleClearAll = this.handleClearAll.bind(this);
         this.handleBackspace = this.handleBackspace.bind(this);
 
     }
 
     render() {
+        const equalKey = {
+            keyChar: "=",
+            id: "equals",
+            display: "="
+        };
+
+        const clearAllKey = {
+            keyChar: "\0x7F" ,
+            id: "clear_all",
+            display: "AC"
+        };
+
         const numberKeys = [
             { 
               keyChar: "0",
@@ -227,7 +384,12 @@ class CalculatorInput extends React.Component {
                 keyChar: "1",
                 id: "one",
                 display: "1" 
-            }//,
+            },
+            { 
+                keyChar: "2",
+                id: "two",
+                display: "2" 
+            },           
             // "2" : {
             //     ID: "two"
             // },
@@ -261,13 +423,15 @@ class CalculatorInput extends React.Component {
                 keyChar: "+",
                 id: "add",
                 display: "+"             
-            }//,
+            },
             // "-" : {
             //     ID: "subtract"
             // },
-            // "*" : {
-            //     ID: "multiply"
-            // },
+            {
+                keyChar: "*",
+                id: "multiply",
+                display: "*"
+            }
             // "/" : {
             //     ID: "divide"
             // },
@@ -275,7 +439,7 @@ class CalculatorInput extends React.Component {
             //     ID: "decimal"
             // },
             // "\0x7F" : {
-            //     ID: "clear"
+            //     ID: "clear_ALL            "
             // },
             // "\0x08" : {
             //     ID: "backspace"
@@ -293,6 +457,8 @@ class CalculatorInput extends React.Component {
             <div className="input-keys">
                 {numberKeysElements}  
                 {operationKeyElements}  
+                <CalculatorButton id={equalKey.id} key={equalKey.id} className="equal-button" keyChar={equalKey.keyChar} display={equalKey.display} onClick={this.handleEqualClick} />
+                <CalculatorButton id={clearAllKey.id} key={clearAllKey.id} className="clear-button" keyChar={clearAllKey.keyChar} display={clearAllKey.display} onClick={this.handleClearAll} />
             </div>
         );
     }
@@ -303,15 +469,19 @@ class CalculatorInput extends React.Component {
     }
 
     handleOperationClick(operator) {
-        console.log(`${keyChar} Clicked!!`);
+        console.log(`${operator} Clicked!!`);
         this.props.dispatch(processNewOperator(operator));
     }
     
-    handleCalculate() {}
+    handleEqualClick() {
+        this.props.dispatch(processEqualKey());        
+    }
     
     handleDecimalPoint() {}
 
-    handleClearInput() {}
+    handleClearAll() {
+        this.props.dispatch(processClearAllKey());
+    }
 
     handleBackspace() {}
 }

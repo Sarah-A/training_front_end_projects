@@ -14,6 +14,7 @@ User Story #3: My calculator should contain 4 clickable elements each containing
 User Story #4: My calculator should contain a clickable element containing a . (decimal point) symbol with a corresponding id="decimal".
 User Story #5: My calculator should contain a clickable element with an id="clear".
 User Story #6: My calculator should contain an element to display values with a corresponding id="display".
+
 User Story #7: At any time, pressing the clear button clears the input and output values, and returns the calculator to its initialized state; 
 				0 should be shown in the element with the id of display.
 User Story #8: As I input numbers, I should be able to see my input in the element with the id of display.
@@ -45,3 +46,11 @@ Improvements:
 Used:
 * JavaScript
 * React, Redux, Thunk, 
+
+Tests Passed:
+>	= without input or with just a number will display <num>=<num>
+>	+ with an operator at the end of the input (e.g. + or *) will disregard it in the calculation
+>	changing the last operator
+>	writing multiple 0s e.g 0000035 will display 35
+>	enter new number after the last '=' will start a new calculation
+>	enter a new operator (+ or *) after the last '=' will start a new calculation with the previous result as the initial input.
