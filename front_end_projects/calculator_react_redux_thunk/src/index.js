@@ -295,9 +295,9 @@ const reducers = {
 class DisplayView extends React.Component {
     render() {        
         return (
-            <div className="display">
+            <div id="display-all">
                 <p id="display-accumulated">{this.props.accumulated}</p>
-                <p id="display-last">{this.props.lastInput}</p>
+                <p id="display">{this.props.lastInput}</p>
             </div>            
         );
     }
@@ -354,6 +354,11 @@ const ConnectedDisplay = connect(mapStateToProps)(CalculatorDisplay);
 const KEY = "KEY_CHAR";
 const ID = "ID";
 
+class calculatorKey {
+    constructor(eventKey, id, display) {
+        Object.assign(this, {eventKey, id, display});     
+    }
+} 
  
 class CalculatorInput extends React.Component {
 
@@ -375,118 +380,31 @@ class CalculatorInput extends React.Component {
     }
 
     render() {
-        // const keys = [
-        //     [ "0",
-        //         { 
-        //             keyCode: "0",
-        //             id: "zero",
-        //             display: "0" 
-        //         }
-        //     ],
-        //     [ "1",
-        //       { 
-        //           keyCode: "1",
-        //           id: "one",
-        //           display: "1" 
-        //       }
-        //     ],
-        //     [ "2",
-        //       { 
-        //           keyCode: "2",
-        //           id: "two",
-        //           display: "2" 
-        //       }
-        //     ]
-        // ];
-        const equalKey = {
-            eventKey: "Enter",
-            id: "equals",
-            display: "="
-        };
-
-        const clearAllKey = {
-            eventKey:  "Delete",
-            id: "clear_all",
-            display: "AC"
-        };
-
-        const decimalPointKey = {
-            eventKey: ".",
-            id: "decimal",
-            display: "."
-        };
+        
+        const equalKey = new calculatorKey("Enter", "equals", "=");
+        const clearAllKey = new calculatorKey("Delete", "clear", "AC");
+        const decimalPointKey = new calculatorKey(".", "decimal", ".");
 
         const numberKeys = [
-            { 
-                eventKey: "0",
-                id: "zero",
-                display: "0" 
-            },
-            { 
-                eventKey: "1",
-                id: "one",
-                display: "1" 
-            },
-            { 
-                eventKey: "2",
-                id: "two",
-                display: "2" 
-            },           
-            // "2" : {
-            //     ID: "two"
-            // },
-            // "3" : {
-            //     ID: "three"
-            // },
-            // "4" : {
-            //     ID: "four"
-            // },
-            // "5" : {
-            //     ID: "five"
-            // },
-            // "6" : {
-            //     ID: "six"
-            // },
-            // "7" : {
-            //     ID: "seven"
-            // },
-            // "8" : {
-            //     ID: "eight"
-            // },
-            // "9" : {
-            //     ID: "nine"
-            // },
-            // "=" : {
-            //     ID: "equals"
-            // }
+            new calculatorKey( "0",  "zero", "0"),
+            new calculatorKey( "1", "one", "1"),
+            new calculatorKey( "2", "two", "2"),
+            new calculatorKey( "3", "three", "3"),
+            new calculatorKey( "4", "four", "4"),
+            new calculatorKey( "5", "five", "5"),
+            new calculatorKey( "6", "six", "6"),
+            new calculatorKey( "7", "seven", "7"),
+            new calculatorKey( "8", "eight", "8"),
+            new calculatorKey( "9", "nine", "9")
         ];
+                   
         const operationKeys = [
-            {
-                eventKey: "+",
-                id: "add",
-                display: "+"             
-            },
-            // "-" : {
-            //     ID: "subtract"
-            // },
-            {
-                eventKey: "*",
-                id: "multiply",
-                display: "*"
-            }
-            // "/" : {
-            //     ID: "divide"
-            // },
-            // "." : {
-            //     ID: "decimal"
-            // },
-            // "\0x7F" : {
-            //     ID: "clear_ALL            "
-            // },
-            // "\0x08" : {
-            //     ID: "backspace"
-            // }         
+            new calculatorKey( "/", "divide", "/"),
+            new calculatorKey( "*", "multiply", "*"),
+            new calculatorKey( "-", "subtract", "-"),
+            new calculatorKey( "+", "add", "+")
         ];
+       
 
         const numberKeysElements = numberKeys.map( (key) =>             
                 (this.getButtonComponent(key, "number", this.handleNumberClick)));
