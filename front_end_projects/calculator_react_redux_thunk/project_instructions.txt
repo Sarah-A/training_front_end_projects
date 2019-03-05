@@ -41,16 +41,19 @@ You can build your project by forking this CodePen pen. Or you can use this CDN 
 Once you're done, submit the URL to your working project with all its tests passing.
 
 Improvements:
-* Should except keyboard keys for all buttons with "delete" for clear.
+* Support Backspace with the same logic as windows calculator (works only on numbers and set the number to 0 once finished backspacing it)
+* Except keyboard keys for all buttons with "delete" for clear and enter for '='.
 
 Used:
 * JavaScript
-* React, Redux, Thunk, 
+* React, Redux, Thunk, seamless-immutable
 
 Tests Passed:
 >	= without input or with just a number will display <num>=<num>
->	+ with an operator at the end of the input (e.g. + or *) will disregard it in the calculation
+>	operator at the end of the input (before the '=') will disregard it in the calculation
 >	changing the last operator
 >	writing multiple 0s e.g 0000035 will display 35
 >	enter new number after the last '=' will start a new calculation
->	enter a new operator (+ or *) after the last '=' will start a new calculation with the previous result as the initial input.
+>	enter a new operator after the last '=' will start a new calculation with the previous result as the initial input.
+>   enter . will translate it to 0.
+>   don't accept multiple decimal points in the same number

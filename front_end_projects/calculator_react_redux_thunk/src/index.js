@@ -490,7 +490,7 @@ $(window).keydown(function(e) {
 class App extends React.Component {
     render() {
         return (
-            <div className="calculator">
+            <div className="calculator rounded">
                 <ConnectedDisplay />
                 <ConnectedInput />
             </div>
