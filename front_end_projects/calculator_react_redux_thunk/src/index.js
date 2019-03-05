@@ -24,6 +24,7 @@ import Immutable from 'seamless-immutable';
 //-----------------------------------------------------------------------------
 
 const EMPTY_LAST = 'calculator.EMPTY_LAST';
+const BACKSPACE_LAST = 'calculator.BACKSPACE_LAST';
 const UPDATE_LAST = 'calculator.UPDATE_LAST';
 const UPDATE_ACCUMULATED = 'calculator.UPDATE_ACCUMULATED';
 const UPDATE_RESULT = 'calculator.UPDATE_RESULT';
@@ -98,6 +99,12 @@ function updateResult(result) {
 function accumulteResult() {
     return {
         type: ACCUMULATE_RESULT
+    };
+}
+
+function backspaceLast() {
+    return {
+        type: BACKSPACE_LAST
     };
 }
 
@@ -195,6 +202,16 @@ function processClearAllKey() {
     }
 }
 
+function processBackspace() {
+    return function(dispatch, getState) {
+        const lastInput = getLastInput(getState());
+        if(isNumeric(lastInput)) {
+            dispatch(backspaceLast());
+        }
+
+    }
+}
+
 
 //-----------------------------------------------------------------------------
 // /src/store/calculator/reducer.js
@@ -213,6 +230,10 @@ function calculatorReducer(state = defaultCalculatorState, action) {
             return state.merge({
                 lastInput: ""
             })
+        case BACKSPACE_LAST:
+            return state.merge( (state.lastInput.length > 1) ?
+                { lastInput: state.lastInput.slice(0,state.lastInput.length-1) } :
+                { lastInput: "0" });
         case UPDATE_LAST:
             return state.merge({
                 lastInput: state.lastInput + action.newChar
@@ -382,6 +403,7 @@ class CalculatorInput extends React.Component {
     render() {
         
         const equalKey = new calculatorKey("Enter", "equals", "=");
+        const backspaceKey = new calculatorKey("Backspace", "backspace", "<=");
         const clearAllKey = new calculatorKey("Delete", "clear", "AC");
         const decimalPointKey = new calculatorKey(".", "decimal", ".");
 
@@ -417,7 +439,8 @@ class CalculatorInput extends React.Component {
                 {this.getButtonComponent(decimalPointKey, "decimal", this.handleDecimalPoint)}
                 {operationKeyElements}  
                 {this.getButtonComponent(equalKey, "equal", this.handleEqualClick)}
-                {this.getButtonComponent(clearAllKey, "cler", this.handleClearAll)}
+                {this.getButtonComponent(clearAllKey, "clear", this.handleClearAll)}
+                {this.getButtonComponent(backspaceKey, "backspace", this.handleBackspace)}
             </div>
         );
     }
@@ -444,7 +467,9 @@ class CalculatorInput extends React.Component {
         this.props.dispatch(processClearAllKey());
     }
 
-    handleBackspace() {}
+    handleBackspace() {
+        this.props.dispatch(processBackspace());
+    }
 }
 
 const ConnectedInput = connect()(CalculatorInput);
