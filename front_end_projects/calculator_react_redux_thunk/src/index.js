@@ -14,7 +14,7 @@ import Immutable from 'seamless-immutable';
 //-----------------------------------------------------------------------------
 // Notes:
 //  * Since the project requires that I create this project as a codePen,
-//      I have to use only one .js file. Therefore, all teh js code is in 
+//      I have to use only one .js file. Therefore, all the js code is in 
 //      this single file. However, in order to show the design, I use comments
 //      to show where every part of the code should be in a real project
 //-----------------------------------------------------------------------------
@@ -182,9 +182,8 @@ function processEqualKey() {
             inputToCalculate += lastInput;
         }
 
-        console.log(`Calculate: ${inputToCalculate}`);
         const result = eval(inputToCalculate);
-        console.log(`In process calculate. result = ${result}`);
+        console.log(`Calculate: ${inputToCalculate} = ${result}`);        
         dispatch(updateResult(result));
         
     }
@@ -278,10 +277,6 @@ function getLastInput(state) {
     return state.calculator.lastInput;
 }
 
-// function getResult(state) {
-//     return state.calculator.result;
-// }
-
 function isCalculationDone(state) {
     return (state.calculator.lastInput === "=");
 }
@@ -320,13 +315,16 @@ class CalculatorButton extends React.Component {
     }
 
     render() {
+        console.log(`creating a button: id: ${this.props.id} key: ${this.props.eventKey}`)
         return (
-            <button id={this.props.id} className={`key-button ${this.props.className}`} onClick={this.onClick}>{this.props.display}</button>        
+            <button id={this.props.id} eventkey={`${this.props.eventKey}`} className={`key-button ${this.props.className}`} onClick={this.onClick}>
+                {this.props.display}
+            </button>        
         );
     }
 
     onClick() {
-        this.props.onClick(this.props.keyChar);
+        this.props.onClick(this.props.display);
     }
 }
 
@@ -355,6 +353,7 @@ const ConnectedDisplay = connect(mapStateToProps)(CalculatorDisplay);
 //-----------------------------------------------------------------------------
 const KEY = "KEY_CHAR";
 const ID = "ID";
+
  
 class CalculatorInput extends React.Component {
 
@@ -369,44 +368,67 @@ class CalculatorInput extends React.Component {
 
     }
 
-    getButtonComponent(key, type, handler) {
+    getButtonComponent(key, type, handler) {        
         return (
         <CalculatorButton {...key} key={key.id} className={`${type}-button`} onClick={handler} />
         );
     }
 
     render() {
+        // const keys = [
+        //     [ "0",
+        //         { 
+        //             keyCode: "0",
+        //             id: "zero",
+        //             display: "0" 
+        //         }
+        //     ],
+        //     [ "1",
+        //       { 
+        //           keyCode: "1",
+        //           id: "one",
+        //           display: "1" 
+        //       }
+        //     ],
+        //     [ "2",
+        //       { 
+        //           keyCode: "2",
+        //           id: "two",
+        //           display: "2" 
+        //       }
+        //     ]
+        // ];
         const equalKey = {
-            keyChar: "=",
+            eventKey: "Enter",
             id: "equals",
             display: "="
         };
 
         const clearAllKey = {
-            keyChar: "\0x7F" ,
+            eventKey:  "Delete",
             id: "clear_all",
             display: "AC"
         };
 
         const decimalPointKey = {
-            keyChar: "." ,
+            eventKey: ".",
             id: "decimal",
             display: "."
         };
 
         const numberKeys = [
             { 
-              keyChar: "0",
-              id: "zero",
-              display: "0" 
+                eventKey: "0",
+                id: "zero",
+                display: "0" 
             },
             { 
-                keyChar: "1",
+                eventKey: "1",
                 id: "one",
                 display: "1" 
             },
             { 
-                keyChar: "2",
+                eventKey: "2",
                 id: "two",
                 display: "2" 
             },           
@@ -440,7 +462,7 @@ class CalculatorInput extends React.Component {
         ];
         const operationKeys = [
             {
-                keyChar: "+",
+                eventKey: "+",
                 id: "add",
                 display: "+"             
             },
@@ -448,7 +470,7 @@ class CalculatorInput extends React.Component {
             //     ID: "subtract"
             // },
             {
-                keyChar: "*",
+                eventKey: "*",
                 id: "multiply",
                 display: "*"
             }
@@ -472,7 +494,7 @@ class CalculatorInput extends React.Component {
                 (this.getButtonComponent(key, "operation", this.handleOperationClick)));
 
         return (
-            <div className="input-keys">
+            <div id="input-keys">
                 {numberKeysElements}  
                 {this.getButtonComponent(decimalPointKey, "decimal", this.handleDecimalPoint)}
                 {operationKeyElements}  
@@ -482,9 +504,9 @@ class CalculatorInput extends React.Component {
         );
     }
 
-    handleNumberClick(keyChar) {
-        console.log(`${keyChar} Clicked!!`);
-        this.props.dispatch(processNewDigit(keyChar));
+    handleNumberClick(keyCode) {
+        console.log(`${keyCode} Clicked!!`);
+        this.props.dispatch(processNewDigit(keyCode));
     }
 
     handleOperationClick(operator) {
@@ -508,6 +530,13 @@ class CalculatorInput extends React.Component {
 }
 
 const ConnectedInput = connect()(CalculatorInput);
+
+$(window).keydown(function(e) {
+    const buttonElement = $("#input-keys").find(`[eventKey="${e.key}"]`);
+    if(buttonElement) {
+        buttonElement.click();
+    }
+});
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
