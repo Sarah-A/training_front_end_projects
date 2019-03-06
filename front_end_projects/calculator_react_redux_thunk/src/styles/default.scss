@@ -1,20 +1,17 @@
-// * {outline: 1px solid red;}
-
 $background-color: #cccccc;
 $display-background: black;
-$equal-background: #0000ff;
-$delete-backgorund: #ff0000;
-
 
 #app {
     height: 100vh;
     width: 100vw;
+    font-family: 'Allerta Stencil', sans-serif;
 }
 
 #display-all {
     height: 50px;
     background-color: $display-background;
     text-align: end;
+    overflow: hidden;
 }
 
 #display-accumulated {

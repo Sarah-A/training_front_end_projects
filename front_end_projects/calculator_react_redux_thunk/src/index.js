@@ -119,8 +119,6 @@ function processNewDigit(newInput) {
         const lastState = getState();
         const lastInput = getLastInput(lastState);     
 
-        console.log(`In processNewDigit with: ${lastInput}, ${newInput}`);
-
         if(isCalculationDone(lastState)) {
             dispatch(clearAll());
             dispatch(emptyLast());
@@ -157,8 +155,6 @@ function processNewOperator(operator) {
     return function(dispatch, getState) {
         const lastInput = getLastInput(getState());
 
-        console.log(`In processNewOperator with: ${lastInput}, ${operator}`);
-
         if(isNumeric(lastInput)) {
             dispatch(updateAccumulated());
         }
@@ -191,7 +187,7 @@ function processEqualKey() {
         }
 
         const result = eval(inputToCalculate);
-        console.log(`Calculate: ${inputToCalculate} = ${result}`);        
+        // console.log(`Calculate: ${inputToCalculate} = ${result}`);        
         dispatch(updateResult(result));
         
     }
@@ -318,7 +314,7 @@ class DisplayView extends React.Component {
     render() {        
         return (
             <div id="display-all" className="m-3">
-                <p id="display-accumulated" className="m-1 text-info font-weight-bold">{this.props.accumulated}</p>
+                <p id="display-accumulated" className="m-1 text-info">{this.props.accumulated}</p>
                 <p id="display" className="m-1 text-white">{this.props.lastInput}</p>
             </div>            
         );
@@ -334,6 +330,8 @@ class CalculatorButton extends React.Component {
     constructor(props) {
         super(props);
         this.onClick = this.onClick.bind(this);
+        
+        this.loseFocus = this.loseFocus.bind(this);
     }
     
     componentDidMount() {
@@ -341,22 +339,26 @@ class CalculatorButton extends React.Component {
     }
 
     render() {
-        console.log(`creating a button: id: ${this.props.id} key: ${this.props.eventKey}`)
         return (
-            <button type="button" id={this.props.id} eventkey={`${this.props.eventKey}`} className={`key-button ${this.props.className} ${this.props.additionalClasses}`} onClick={this.onClick}>
+            <button type="button" id={this.props.id} data-eventkey={`${this.props.eventKey}`} className={`key-button ${this.props.className} ${this.props.additionalClasses}`} onClick={this.onClick}>
                 {this.props.displayText}
             </button>        
         );
     }
 
-    onClick() {
+    loseFocus() {
         this.buttonElement.blur();
+    }
+
+    onClick() {
+        setTimeout(this.loseFocus, 100);
         this.props.onClick(this.props.displayText);
     }
 }
 
 //-----------------------------------------------------------------------------
-// /src/containers/DisplayText------------------------------------------------------------------------
+// /src/containers/DisplayText
+//-----------------------------------------------------------------------------
 class CalculatorDisplay extends React.Component {
     render() {
         return (
@@ -377,8 +379,6 @@ const ConnectedDisplay = connect(mapStateToProps)(CalculatorDisplay);
 //-----------------------------------------------------------------------------
 // /src/containers/CalculatorInput
 //-----------------------------------------------------------------------------
-const KEY = "KEY_CHAR";
-const ID = "ID";
 
 class calculatorKey {
     constructor(eventKey, id, displayText, additionalClasses="") {
@@ -420,7 +420,8 @@ class CalculatorInput extends React.Component {
     render() {
         
         const equalKey = new calculatorKey("Enter", "equals", "=", "col-12 bg-success");
-        const backspaceKey = new calculatorKey("Backspace", "backspace", "<=", "w-100 bg-danger");
+        const backspaceIcon = (<i class="fas fa-backspace"></i>);
+        const backspaceKey = new calculatorKey("Backspace", "backspace", backspaceIcon, "w-100 bg-danger");
         const clearAllKey = new calculatorKey("Delete", "clear", "AC", "w-100 bg-danger");
         const decimalPointKey = new calculatorKey(".", "decimal", ".", "col-4 bg-light");
 
@@ -436,7 +437,7 @@ class CalculatorInput extends React.Component {
             new digitKey( "1", "one"),
             new digitKey( "0",  "zero", "0", "col-8  bg-light")
         ];
-                   
+        
         const operationKeys = [
             new operatorKey( "/", "divide"),
             new operatorKey( "*", "multiply"),
@@ -479,12 +480,10 @@ class CalculatorInput extends React.Component {
     }
 
     handleNumberClick(keyCode) {
-        console.log(`${keyCode} Clicked!!`);
         this.props.dispatch(processNewDigit(keyCode));
     }
 
     handleOperationClick(operator) {
-        console.log(`${operator} Clicked!!`);
         this.props.dispatch(processNewOperator(operator));
     }
     
@@ -507,19 +506,19 @@ class CalculatorInput extends React.Component {
 
 const ConnectedInput = connect()(CalculatorInput);
 
-$(window).keydown(function(e) {
-    const buttonElement = $("#input-keys").find(`[eventKey="${e.key}"]`);
-    if(buttonElement) {
-        buttonElement.click();
-    }
-});
-
-//-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 //  /src/App.js
 //-----------------------------------------------------------------------------
+
+$(window).keydown(function(e) {
+    let buttonElement = $("#input-keys").find(`[data-eventKey="${e.key}"]`);    
+    if(buttonElement) {
+        buttonElement.focus();
+        buttonElement.click();
+    }
+});
+
 class App extends React.Component {
     render() {
         return (
@@ -530,9 +529,6 @@ class App extends React.Component {
         );
     }
 }
-
-//export defult App;
-
 
 
 //-----------------------------------------------------------------------------
