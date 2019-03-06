@@ -4,6 +4,7 @@
 // const thunk = ReduxThunk.default;
 
 // For PC Environment:
+
 import React from 'react';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider, connect } from 'react-redux';
@@ -316,9 +317,9 @@ const reducers = {
 class DisplayView extends React.Component {
     render() {        
         return (
-            <div id="display-all">
-                <p id="display-accumulated">{this.props.accumulated}</p>
-                <p id="display">{this.props.lastInput}</p>
+            <div id="display-all" className="m-3">
+                <p id="display-accumulated" className="m-1 text-info font-weight-bold">{this.props.accumulated}</p>
+                <p id="display" className="m-1 text-white">{this.props.lastInput}</p>
             </div>            
         );
     }
@@ -334,24 +335,28 @@ class CalculatorButton extends React.Component {
         super(props);
         this.onClick = this.onClick.bind(this);
     }
+    
+    componentDidMount() {
+        this.buttonElement = document.getElementById(this.props.id);
+    }
 
     render() {
         console.log(`creating a button: id: ${this.props.id} key: ${this.props.eventKey}`)
         return (
-            <button id={this.props.id} eventkey={`${this.props.eventKey}`} className={`key-button ${this.props.className}`} onClick={this.onClick}>
-                {this.props.display}
+            <button type="button" id={this.props.id} eventkey={`${this.props.eventKey}`} className={`key-button ${this.props.className} ${this.props.additionalClasses}`} onClick={this.onClick}>
+                {this.props.displayText}
             </button>        
         );
     }
 
     onClick() {
-        this.props.onClick(this.props.display);
+        this.buttonElement.blur();
+        this.props.onClick(this.props.displayText);
     }
 }
 
 //-----------------------------------------------------------------------------
-// /src/containers/Display
-//-----------------------------------------------------------------------------
+// /src/containers/DisplayText------------------------------------------------------------------------
 class CalculatorDisplay extends React.Component {
     render() {
         return (
@@ -376,8 +381,20 @@ const KEY = "KEY_CHAR";
 const ID = "ID";
 
 class calculatorKey {
-    constructor(eventKey, id, display) {
-        Object.assign(this, {eventKey, id, display});     
+    constructor(eventKey, id, displayText, additionalClasses="") {
+        Object.assign(this, {eventKey, id, displayText, additionalClasses});
+    }
+} 
+
+class digitKey extends calculatorKey{
+    constructor(eventKey, id, displayText=eventKey, additionalClasses="digit-key col-4 bg-light") {
+        super(eventKey, id, displayText, additionalClasses);
+    }
+} 
+
+class operatorKey extends calculatorKey{
+    constructor(eventKey, id, displayText=eventKey, additionalClasses="w-100 text-light bg-secondary") {
+        super(eventKey, id, displayText, additionalClasses);
     }
 } 
  
@@ -402,29 +419,29 @@ class CalculatorInput extends React.Component {
 
     render() {
         
-        const equalKey = new calculatorKey("Enter", "equals", "=");
-        const backspaceKey = new calculatorKey("Backspace", "backspace", "<=");
-        const clearAllKey = new calculatorKey("Delete", "clear", "AC");
-        const decimalPointKey = new calculatorKey(".", "decimal", ".");
+        const equalKey = new calculatorKey("Enter", "equals", "=", "col-12 bg-success");
+        const backspaceKey = new calculatorKey("Backspace", "backspace", "<=", "w-100 bg-danger");
+        const clearAllKey = new calculatorKey("Delete", "clear", "AC", "w-100 bg-danger");
+        const decimalPointKey = new calculatorKey(".", "decimal", ".", "col-4 bg-light");
 
         const numberKeys = [
-            new calculatorKey( "0",  "zero", "0"),
-            new calculatorKey( "1", "one", "1"),
-            new calculatorKey( "2", "two", "2"),
-            new calculatorKey( "3", "three", "3"),
-            new calculatorKey( "4", "four", "4"),
-            new calculatorKey( "5", "five", "5"),
-            new calculatorKey( "6", "six", "6"),
-            new calculatorKey( "7", "seven", "7"),
-            new calculatorKey( "8", "eight", "8"),
-            new calculatorKey( "9", "nine", "9")
+            new digitKey( "9", "nine"),
+            new digitKey( "8", "eight"),
+            new digitKey( "7", "seven"),
+            new digitKey( "6", "six"),
+            new digitKey( "5", "five"),
+            new digitKey( "4", "four"),
+            new digitKey( "3", "three"),
+            new digitKey( "2", "two"),
+            new digitKey( "1", "one"),
+            new digitKey( "0",  "zero", "0", "col-8  bg-light")
         ];
                    
         const operationKeys = [
-            new calculatorKey( "/", "divide", "/"),
-            new calculatorKey( "*", "multiply", "*"),
-            new calculatorKey( "-", "subtract", "-"),
-            new calculatorKey( "+", "add", "+")
+            new operatorKey( "/", "divide"),
+            new operatorKey( "*", "multiply"),
+            new operatorKey( "-", "subtract"),
+            new operatorKey( "+", "add")
         ];
        
 
@@ -434,13 +451,29 @@ class CalculatorInput extends React.Component {
                 (this.getButtonComponent(key, "operation", this.handleOperationClick)));
 
         return (
-            <div id="input-keys">
-                {numberKeysElements}  
-                {this.getButtonComponent(decimalPointKey, "decimal", this.handleDecimalPoint)}
-                {operationKeyElements}  
-                {this.getButtonComponent(equalKey, "equal", this.handleEqualClick)}
-                {this.getButtonComponent(clearAllKey, "clear", this.handleClearAll)}
-                {this.getButtonComponent(backspaceKey, "backspace", this.handleBackspace)}
+            <div id="input-keys" className="m-3" >
+                <div className="row no-gutters">
+                    <div className="col-6">
+                        {this.getButtonComponent(clearAllKey, "clear", this.handleClearAll)}
+                    </div>
+                    <div className="col-6">
+                        {this.getButtonComponent(backspaceKey, "backspace", this.handleBackspace)}
+                    </div>
+                </div>
+                <div className="row  no-gutters">
+                    <div className="col-9">
+                        {numberKeysElements}  
+                        {this.getButtonComponent(decimalPointKey, "decimal", this.handleDecimalPoint)}
+                    </div>
+                    <div className="col-3">
+                        {operationKeyElements}      
+                    </div>
+                </div>
+                <div className="row  no-gutters">
+                    <div className="col-12">
+                        {this.getButtonComponent(equalKey, "equal", this.handleEqualClick)}
+                    </div>
+                </div>
             </div>
         );
     }

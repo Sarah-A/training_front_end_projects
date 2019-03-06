@@ -1,4 +1,4 @@
-* {outline: 1px solid red;}
+// * {outline: 1px solid red;}
 
 $background-color: #cccccc;
 $display-background: black;
@@ -12,28 +12,31 @@ $delete-backgorund: #ff0000;
 }
 
 #display-all {
-    height: 100px;
+    height: 50px;
     background-color: $display-background;
+    text-align: end;
 }
 
 #display-accumulated {
-    height: 30%;
-    color: orange;
+    height: 30%;    
     font-size: 0.7em;
 }
 
 #display {
-    height: 60%;
-    color: white;
-    font-size: 1.5em;
+    height: 55%;
+    font-size: 1.2em;
 }
 
 .calculator {
     width: 200px;
     max-width: 200px;
-    height: 300px;
-    max-height: 300px;
+    height: 270px;
+    max-height: 270px;
     background-color: $background-color;
     border: 2px solid $display-background;    
     margin: auto;
+}
+
+button {
+     border: thin solid $background-color;
 }
