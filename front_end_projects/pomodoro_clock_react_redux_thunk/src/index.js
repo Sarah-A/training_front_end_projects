@@ -137,6 +137,49 @@ class TogglePanel extends React.Component {
 }
 
 //-----------------------------------------------------------------------------
+// src/componenets/TimerSettingsView
+//-----------------------------------------------------------------------------
+class TimerSettingsView extends React.Component {
+
+    constructor(props) {
+        super(props);
+
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    render() {
+        const timerType = this.props.timerType;
+        const timerLabel = timerType.charAt(0).toUpperCase() + timerType.slice(1);
+        return (
+            <div>
+                <label id={`${timerType}-label`} htmlFor={`${timerType}-length`}>{timerLabel} Length</label>
+                <div className="input-group">
+                    <div className="input-group-prepend">
+                        <button className="btn btn-outline-info" type="button" value="decrement" aria-label="decrement time" onClick={this.handleChange}>
+                            <i className="fas fa-angle-down"></i>
+                        </button>
+                    </div>
+                    <input type="text" id={`${timerType}-length`} className="form-control" value={this.props.timerLength} onChange={this.handleChange}></input>
+                    <div className="input-group-append">
+                        <button className="btn btn-outline-info" type="button" value="increment" arial-label="increment time">
+                            <i className="fas fa-angle-up"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // setting: break 
+    // button: decrement , icon, handler
+
+    handleChange(e) {
+        console.log(`Change Break Time Button Clicked: ${e.currentTarget.value}`);
+        this.props.handleChange(e.currentTarget.value);
+    }
+}
+
+//-----------------------------------------------------------------------------
 //  src/containers/Clock.js
 //-----------------------------------------------------------------------------
 class Clock extends React.Component {
@@ -168,34 +211,26 @@ class ClockSettings extends React.Component {
     constructor(props) {
         super(props);
 
-        this.handleChangeBreakTime = this.handleChangeBreakTime.bind(this);
+        this.handleChangeBreakTimer = this.handleChangeBreakTimer.bind(this);
+        this.handleChangeSessionTimer = this.handleChangeSessionTimer.bind(this);
     }
 
     render() {
         return (
             <div id="clock-sidebar" className="collapse">
-                <label id="break-label" htmlFor="break-length">Break Length</label>
-                <div className="input-group">
-                    <div className="input-group-prepend">
-                        <button className="btn btn-outline-info" type="button" value="decrement" aria-label="decrement time" onClick={this.handleChangeBreakTime}>
-                            <i className="fas fa-angle-down"></i>
-                        </button>
-                    </div>
-                    <input type="text" id="break-length" className="form-control" value={this.props.breakLength} onChange={this.handleChangeBreakTime} placeholder=""></input>
-                    <div className="input-group-append">
-                        <button className="btn btn-outline-info" type="button" value="increment" arial-label="increment time">
-                            <i className="fas fa-angle-up"></i>
-                        </button>
-                    </div>
-                </div>
+                <TimerSettingsView timerType="session" timerLength={this.props.sessionLength} handleChange={this.handleChangeSessionTimer} />
+                <TimerSettingsView timerType="break" timerLength={this.props.breakLength} handleChange={this.handleChangeBreakTimer} />
             </div>
         );
+           
     }
 
-    handleChangeBreakTime(e) {
-        // Extend time in store.
-        console.log(`Change Break Time Button Clicked: ${e.currentTarget.value}`);
-        this.props.dispatch(changeTimerLength(BREAK_TIMER, e.currentTarget.value));
+    handleChangeBreakTimer(newValue) {
+        this.props.dispatch(changeTimerLength(BREAK_TIMER, newValue));
+    }
+
+    handleChangeSessionTimer(newValue) {
+        this.props.dispatch(changeTimerLength(SESSION_TIMER, newValue));
     }
 }
 
