@@ -28,6 +28,17 @@ function isNumeric(val) {
     return !isNaN(val);
 }
 
+function minutesToSeconds(minutes) {
+    return (minutes * 60);
+}
+
+function secondsForDispaly(seconds) {
+    return {
+        minutes: Math.floor(seconds / 60),
+        seconds: (seconds % 60)
+    }
+}
+
 //-----------------------------------------------------------------------------
 // src/store/reducers/clock/actionTypes.js
 //-----------------------------------------------------------------------------
@@ -44,31 +55,42 @@ function changeTimerLengthAction(timerType, newLength) {
     };
 }
 
+function resetSettingsAction() {
+    return {
+        type: RESET_SETTINGS
+    };
+}
+
 
 function changeTimerLength(timerType, value) {
-    return function(dispatch, getState) {
+    return function (dispatch, getState) {
         console.log(` in changeTimerLength with: ${timerType},${value}`);
 
         let timerLength = getTimerLength(timerType, getState());
         let newTimerLength = timerLength;
 
-        if(value === "increment") {
+        if (value === "increment") {
             newTimerLength += 1;
         }
-        else if( value === "decrement") {
+        else if (value === "decrement") {
             newTimerLength -= 1;
         }
-        else if(isNumeric(value)) {
+        else if (isNumeric(value)) {
             newTimerLength = Number(value);
         }
-        
-        
-        if( (newTimerLength != timerLength) && 
-        (newTimerLength < 61) && 
-        (newTimerLength > 0 )) {
+
+        if ((newTimerLength != timerLength) &&
+            (newTimerLength < 61) &&
+            (newTimerLength > 0)) {
             console.log(`old timer: ${timerLength}, new timer: ${newTimerLength}`);
             dispatch(changeTimerLengthAction(timerType, newTimerLength));
         }
+    }
+}
+
+function resetSettings() {
+    return function (dispatch, getState) {
+        dispatch(resetSettingsAction());
     }
 }
 
@@ -79,18 +101,19 @@ function changeTimerLength(timerType, value) {
 const SESSION_TIMER = 'clock.SESSION_TIMER';
 const BREAK_TIMER = 'clock.BREAK_TIMER';
 
+
+
 const defaultClockState = Immutable({
     sessionLength: 25,
     breakLength: 5
 });
 
-
 function clockReducer(state = defaultClockState, action) {
-    switch(action.type) {
+    switch (action.type) {
         case CHANGE_TIMER_LENGTH:
             const timerLengthToMerge = (action.timerType === SESSION_TIMER) ?
-                                {sessionLength: action.newLength} :
-                                {breakLength: action.newLength};
+                { sessionLength: action.newLength } :
+                { breakLength: action.newLength };
             return state.merge(timerLengthToMerge);
         case RESET_SETTINGS:
             return state.merge(defaultClockState);
@@ -104,7 +127,7 @@ function clockReducer(state = defaultClockState, action) {
 //--------------------------------
 
 function getTimerLength(timerType, state) {
-    switch(timerType) {
+    switch (timerType) {
         case SESSION_TIMER:
             return state.clock.sessionLength;
         case BREAK_TIMER:
@@ -112,6 +135,17 @@ function getTimerLength(timerType, state) {
         default:
             throw new Error(`Invalid timerType in getTimerLength: ${timerType}`);
     }
+}
+
+function getTimerLabel(timerType) {
+
+    switch(timerType) {
+        case SESSION_TIMER:
+        default:
+            return 'Session';
+        case BREAK_TIMER:
+            return 'Break';
+    }    
 }
 
 //-----------------------------------------------------------------------------
@@ -126,13 +160,13 @@ const reducers = {
 // src/components/TogglePanel
 //-----------------------------------------------------------------------------
 class TogglePanel extends React.Component {
-    render () {
+    render() {
         return (
-            <button type="button" id="sidebar-toggler-button" className="btn btn-outline-info rounded-0 h-100 mr-3 text-large" 
-                                data-toggle="collapse" data-target="#clock-sidebar" aria-expanded="false" aria-controls="clock-sidebar">
-                            <i className="fas fa-angle-right"></i>
-                        </button>
-        );    
+            <button type="button" id="sidebar-toggler-button" className="btn btn-outline-info rounded-0 h-100 mr-3 text-large"
+                data-toggle="collapse" data-target="#clock-sidebar" aria-expanded="false" aria-controls="clock-sidebar">
+                <i className="fas fa-angle-right"></i>
+            </button>
+        );
     }
 }
 
@@ -143,25 +177,23 @@ class TimerSettingsView extends React.Component {
 
     constructor(props) {
         super(props);
-
-        this.handleChange = this.handleChange.bind(this);
     }
 
     render() {
-        const timerType = this.props.timerType;
-        const timerLabel = timerType.charAt(0).toUpperCase() + timerType.slice(1);
+        const timerTypeLabel = this.props.timerTypeLabel;
+        const timerType = timerTypeLabel.charAt(0).toLowerCase() + timerTypeLabel.slice(1);
         return (
             <div>
-                <label id={`${timerType}-label`} htmlFor={`${timerType}-length`}>{timerLabel} Length</label>
+                <label id={`${timerType}-label`} htmlFor={`${timerType}-length`}>{timerTypeLabel} Length</label>
                 <div className="input-group">
                     <div className="input-group-prepend">
-                        <button className="btn btn-outline-info" type="button" value="decrement" aria-label="decrement time" onClick={this.handleChange}>
+                        <button id={`${timerType}-decrement`} className="btn btn-outline-info" type="button" value="decrement" aria-label="decrement timer" onClick={this.handleChange}>
                             <i className="fas fa-angle-down"></i>
                         </button>
                     </div>
                     <input type="text" id={`${timerType}-length`} className="form-control" value={this.props.timerLength} onChange={this.handleChange}></input>
                     <div className="input-group-append">
-                        <button className="btn btn-outline-info" type="button" value="increment" arial-label="increment time">
+                        <button id={`${timerType}-increment`} className="btn btn-outline-info" type="button" value="increment" aria-label="increment timer" onClick={this.handleChange}>
                             <i className="fas fa-angle-up"></i>
                         </button>
                     </div>
@@ -173,7 +205,7 @@ class TimerSettingsView extends React.Component {
     // setting: break 
     // button: decrement , icon, handler
 
-    handleChange(e) {
+    handleChange = (e) => {
         console.log(`Change Break Time Button Clicked: ${e.currentTarget.value}`);
         this.props.handleChange(e.currentTarget.value);
     }
@@ -183,20 +215,152 @@ class TimerSettingsView extends React.Component {
 //  src/containers/Clock.js
 //-----------------------------------------------------------------------------
 class Clock extends React.Component {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            currentTimer: SESSION_TIMER,
+            leftInSeconds: minutesToSeconds(this.props.sessionLength),
+            isTimerRunning: false
+        };
+
+    }
+
     render() {
+       
+        let startPauseButtonAriaLabel, startPauseButtonIcon;
+
+        const timer = secondsForDispaly(this.state.leftInSeconds);
+        if (this.state.isTimerRunning) {
+            startPauseButtonAriaLabel = "Pause timer";
+            startPauseButtonIcon = <i className="fas fa-pause"></i>;
+        }
+        else {
+            startPauseButtonAriaLabel = "Start timer";
+            startPauseButtonIcon = <i className="fas fa-play"></i>
+        }
+
         return (
-            <div id="clock">
-                <p>Pomodoro Clock...</p>
-                <p>{this.props.sessionLength} , {this.props.breakLength}</p>
+            <div id="clock" className="m-auto d-flex flex-column align-items-center">
+                <h1>{getTimerLabel(this.state.currentTimer)}</h1>
+                <p className="h2">{timer.minutes}:{timer.seconds}</p>
+                <div className="d-flex">
+                    <button className="btn btn-outline-info border-0" type="button" onClick={this.onStartPauseClick} value="" aria-label={startPauseButtonAriaLabel}>
+                        {startPauseButtonIcon}
+                    </button>
+                    <button className="btn btn-outline-info" type="button" onClick={this.handleStopClock} value="stop" aria-label="stop timer">
+                        <i className="fas fa-stop"></i>
+                    </button>
+                    <button className="btn btn-outline-info" type="button" onClick={this.handleResetClock} value="reset" aria-label="reset all timers">
+                        <i className="fas fa-sync-alt"></i>
+                    </button>
+                </div>
             </div>
         );
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if(!this.state.isTimerRunning && (prevProps.sessionLength !== this.props.sessionLength)) {
+            this.initLeftInSeconds();
+        }
+    }
+
+    resetTimers = (callback = ()=>{}) => {
+        this.setState({
+            currentTimer: SESSION_TIMER,
+            leftInSeconds: minutesToSeconds(this.props.sessionLength),
+            isTimerRunning: false
+            },
+            callback
+        );
+    }
+
+    handleResetClock = () => {
+        this.resetTimers(()=>{
+            this.props.dispatch(resetSettings());
+        });  
+    }
+
+    timerStartPauseCallback = () => {
+        if (this.state.isTimerRunning) {
+            console.log(`time started!`);
+            this.timerTickCallback();
+        }
+        else {
+            console.log(`time paused!`);
+        }
+    }
+
+    handleStopClock = () => {
+        this.resetTimers();
+    }
+
+    onStartPauseClick = () => {
+        this.setState({
+            isTimerRunning: !(this.state.isTimerRunning)
+        },
+            this.timerStartPauseCallback        // Note: since setState is asynchronous, we can't know when it will execute and therefore,
+                                                // we must continue its processing using a callback.
+        );
+    }
+
+    timerTickCallback = () => {
+        console.log(`in Timer tick callback. Time left: ${this.state.leftInSeconds}`);
+
+        if (this.state.leftInSeconds === 0) {
+            this.handleTimerExpiry();
+        }
+
+        setTimeout(this.onTimerTick, 1000);
+    }
+
+    onTimerTick = () => {
+
+        if (!this.state.isTimerRunning) {
+            return;
+        }
+
+        this.setState({
+            leftInSeconds: this.state.leftInSeconds - 1
+            },
+            this.timerTickCallback
+        );
+    }
+
+    getNextTimer = () => {
+        if(this.state.currentTimer == SESSION_TIMER) {
+            return BREAK_TIMER;
+        }
+        else {
+            return SESSION_TIMER;
+        }    
+    }
+
+    getCurrentTimerLength = () => {
+        return ( (this.state.currentTimer === SESSION_TIMER) ?
+                 this.props.sessionLength :
+                 this.props.breakLength);
+    }
+
+    handleTimerExpiry = () => {
+        this.setState({
+            currentTimer: this.getNextTimer()
+            },
+            this.initLeftInSeconds);
+    }
+
+    initLeftInSeconds = () => {        
+        this.setState({
+            leftInSeconds: minutesToSeconds(this.getCurrentTimerLength())
+        });
     }
 }
 
 function mapStateToClockProps(state) {
     return {
         sessionLength: getTimerLength(SESSION_TIMER, state),
-        breakLength: getTimerLength(BREAK_TIMER,state)
+        breakLength: getTimerLength(BREAK_TIMER, state)
     };
 }
 
@@ -210,34 +374,31 @@ class ClockSettings extends React.Component {
 
     constructor(props) {
         super(props);
-
-        this.handleChangeBreakTimer = this.handleChangeBreakTimer.bind(this);
-        this.handleChangeSessionTimer = this.handleChangeSessionTimer.bind(this);
     }
 
     render() {
         return (
             <div id="clock-sidebar" className="collapse">
-                <TimerSettingsView timerType="session" timerLength={this.props.sessionLength} handleChange={this.handleChangeSessionTimer} />
-                <TimerSettingsView timerType="break" timerLength={this.props.breakLength} handleChange={this.handleChangeBreakTimer} />
+                <TimerSettingsView timerTypeLabel={getTimerLabel(SESSION_TIMER)} timerLength={this.props.sessionLength} handleChange={this.handleChangeSessionTimer} />
+                <TimerSettingsView timerTypeLabel={getTimerLabel(BREAK_TIMER)} timerLength={this.props.breakLength} handleChange={this.handleChangeBreakTimer} />
             </div>
         );
-           
     }
 
-    handleChangeBreakTimer(newValue) {
+    handleChangeBreakTimer = (newValue) => {
         this.props.dispatch(changeTimerLength(BREAK_TIMER, newValue));
     }
 
-    handleChangeSessionTimer(newValue) {
+    handleChangeSessionTimer = (newValue) => {
         this.props.dispatch(changeTimerLength(SESSION_TIMER, newValue));
     }
+
 }
 
 function StateToSettingsProps(state) {
     return {
         sessionLength: getTimerLength(SESSION_TIMER, state),
-        breakLength: getTimerLength(BREAK_TIMER,state)  
+        breakLength: getTimerLength(BREAK_TIMER, state)
     };
 }
 

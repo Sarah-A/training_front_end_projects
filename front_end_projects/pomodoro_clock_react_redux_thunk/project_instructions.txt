@@ -8,6 +8,7 @@ User Story #3: I can see two clickable elements with corresponding IDs: id="brea
 User Story #4: I can see two clickable elements with corresponding IDs: id="break-increment" and id="session-increment".
 User Story #5: I can see an element with a corresponding id="break-length", which by default (on load) displays a value of 5.
 User Story #6: I can see an element with a corresponding id="session-length", which by default displays a value of 25.
+
 User Story #7: I can see an element with a corresponding id="timer-label", that contains a string indicating a session is initialized (e.g. "Session").
 User Story #8: I can see an element with corresponding id="time-left". NOTE: Paused or running, the value in this field should always be displayed in mm:ss format (i.e. 25:00).
 User Story #9: I can see a clickable element with a corresponding id="start_stop".
@@ -35,7 +36,8 @@ Once you're done, submit the URL to your working project with all its tests pass
 
 Improvements:
 * Setting opens to the left with a button
-* 
+* Start/Pause button changes according to context
+* Used babel-class-properties to do auto-binding of arrow functions in class.
 
 Used:
 * 
