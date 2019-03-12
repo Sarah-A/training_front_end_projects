@@ -1,3 +1,5 @@
+"use strict";
+
 // For CodePen:
 // const {createStore, combineReducers, applyMiddleware} = Redux;
 // const {Provider, connect } = ReactRedux;
@@ -34,8 +36,8 @@ function minutesToSeconds(minutes) {
 
 function secondsForDispaly(seconds) {
     return {
-        minutes: Math.floor(seconds / 60),
-        seconds: (seconds % 60)
+        minutes: (Math.floor(seconds / 60)).toString().padStart(2, "0"),
+        seconds: (seconds % 60).toString().padStart(2, "0")
     }
 }
 
@@ -171,6 +173,28 @@ class TogglePanel extends React.Component {
 }
 
 //-----------------------------------------------------------------------------
+// src/components/ButtonView
+//-----------------------------------------------------------------------------
+class ButtonView extends React.Component {
+
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (
+            <button className="btn btn-outline-info" id={this.props.id} type="button" onClick={this.onClick} value={this.props.value} aria-label={this.props.ariaLabel}>
+                {this.props.icon}
+            </button>
+        );
+    }
+
+    onClick = (e) => {
+        this.props.onClick(e.currentTarget.value);
+    }
+}
+
+//-----------------------------------------------------------------------------
 // src/componenets/TimerSettingsView
 //-----------------------------------------------------------------------------
 class TimerSettingsView extends React.Component {
@@ -187,15 +211,19 @@ class TimerSettingsView extends React.Component {
                 <label id={`${timerType}-label`} htmlFor={`${timerType}-length`}>{timerTypeLabel} Length</label>
                 <div className="input-group">
                     <div className="input-group-prepend">
-                        <button id={`${timerType}-decrement`} className="btn btn-outline-info" type="button" value="decrement" aria-label="decrement timer" onClick={this.handleChange}>
-                            <i className="fas fa-angle-down"></i>
-                        </button>
+                        <ButtonView onClick={this.onChangeClick} 
+                                    id = {`${timerType}-decrement`}
+                                    value="decrement" 
+                                    ariaLabel="decrement timer"
+                                    icon = {<i className="fas fa-angle-down"></i>} />
                     </div>
                     <input type="text" id={`${timerType}-length`} className="form-control" value={this.props.timerLength} onChange={this.handleChange}></input>
                     <div className="input-group-append">
-                        <button id={`${timerType}-increment`} className="btn btn-outline-info" type="button" value="increment" aria-label="increment timer" onClick={this.handleChange}>
-                            <i className="fas fa-angle-up"></i>
-                        </button>
+                        <ButtonView onClick={this.onChangeClick} 
+                                    id = {`${timerType}-increment`}
+                                    value="increment" 
+                                    ariaLabel="increment timer"
+                                    icon = {<i className="fas fa-angle-up"></i>} />                                   
                     </div>
                 </div>
             </div>
@@ -205,8 +233,13 @@ class TimerSettingsView extends React.Component {
     // setting: break 
     // button: decrement , icon, handler
 
+    onChangeClick = (value) => {
+        console.log(`Up/Down Change Timer Button Clicked: ${value}`);
+        this.props.handleChange(value);
+    }
+
     handleChange = (e) => {
-        console.log(`Change Break Time Button Clicked: ${e.currentTarget.value}`);
+        console.log(`Timer Length Changed to: ${e.currentTarget.value}`);
         this.props.handleChange(e.currentTarget.value);
     }
 }
@@ -231,7 +264,7 @@ class Clock extends React.Component {
        
         let startPauseButtonAriaLabel, startPauseButtonIcon;
 
-        const timer = secondsForDispaly(this.state.leftInSeconds);
+        const timeLeftDisplay = secondsForDispaly(this.state.leftInSeconds);
         if (this.state.isTimerRunning) {
             startPauseButtonAriaLabel = "Pause timer";
             startPauseButtonIcon = <i className="fas fa-pause"></i>;
@@ -243,18 +276,27 @@ class Clock extends React.Component {
 
         return (
             <div id="clock" className="m-auto d-flex flex-column align-items-center">
-                <h1>{getTimerLabel(this.state.currentTimer)}</h1>
-                <p className="h2">{timer.minutes}:{timer.seconds}</p>
+                <h1 id="timer-label">{getTimerLabel(this.state.currentTimer)}</h1>
+                <p className="h2" id="time-left">{timeLeftDisplay.minutes}:{timeLeftDisplay.seconds}</p>
+                <audio id="beep">
+                    <source src="https://goo.gl/65cBl1" type="audio/mpeg" />
+                </audio>
                 <div className="d-flex">
-                    <button className="btn btn-outline-info border-0" type="button" onClick={this.onStartPauseClick} value="" aria-label={startPauseButtonAriaLabel}>
-                        {startPauseButtonIcon}
-                    </button>
-                    <button className="btn btn-outline-info" type="button" onClick={this.handleStopClock} value="stop" aria-label="stop timer">
-                        <i className="fas fa-stop"></i>
-                    </button>
-                    <button className="btn btn-outline-info" type="button" onClick={this.handleResetClock} value="reset" aria-label="reset all timers">
-                        <i className="fas fa-sync-alt"></i>
-                    </button>
+                    <ButtonView onClick={this.onStartPauseClick} 
+                                id="start_stop"
+                                value="" 
+                                ariaLabel={startPauseButtonAriaLabel} 
+                                icon = {startPauseButtonIcon} />
+                    <ButtonView onClick={this.onStopClick} 
+                                id="stop"
+                                value="stop" 
+                                ariaLabel="stop timer" 
+                                icon = {<i className="fas fa-stop"></i>} />
+                    <ButtonView onClick={this.onResetClick} 
+                                id="reset"
+                                value="reset" 
+                                ariaLabel="reset all timers" 
+                                icon = {<i className="fas fa-sync-alt"></i>} />
                 </div>
             </div>
         );
@@ -266,7 +308,21 @@ class Clock extends React.Component {
         }
     }
 
+    componentDidMount() {
+        this.alarmElement = $("#beep");
+    }
+
+    playAlarm = () => {
+        this.alarmElement.trigger("play");
+    }
+
+    stopAlarm = () => {
+        this.alarmElement.trigger("pause");
+        this.alarmElement.currentTime = 0;
+    }
+
     resetTimers = (callback = ()=>{}) => {
+        this.stopAlarm;
         this.setState({
             currentTimer: SESSION_TIMER,
             leftInSeconds: minutesToSeconds(this.props.sessionLength),
@@ -276,7 +332,7 @@ class Clock extends React.Component {
         );
     }
 
-    handleResetClock = () => {
+    onResetClick = () => {
         this.resetTimers(()=>{
             this.props.dispatch(resetSettings());
         });  
@@ -292,7 +348,7 @@ class Clock extends React.Component {
         }
     }
 
-    handleStopClock = () => {
+    onStopClick = () => {
         this.resetTimers();
     }
 
@@ -344,6 +400,9 @@ class Clock extends React.Component {
     }
 
     handleTimerExpiry = () => {
+
+        this.playAlarm();
+        
         this.setState({
             currentTimer: this.getNextTimer()
             },
