@@ -1,10 +1,32 @@
-* {outline: 1px solid darkgray;}
+// * {outline: 1px solid darkgray;}
 
-body, #app, #pomodoro {
+html, body {
     height: 100vh;
-    width: 100vw;
+    width: calc(100vw - (100%-100vw));
+}
+
+#app, #pomodoro {
+    height: 100vh;
+    width: calc(100vw - (100%-100vw));  
+    padding: 0;
+}
+
+#clock-sidebar {
+    max-width: 40%;
 }
 
 .break {
     color: red;
+}
+
+#clock {
+    min-width: 25%;    
+}
+
+#reset {
+    margin-left: auto;
+}
+
+#clock button {
+    border: none;
 }

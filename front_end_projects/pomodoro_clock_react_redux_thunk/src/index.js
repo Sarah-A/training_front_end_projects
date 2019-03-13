@@ -281,7 +281,7 @@ class Clock extends React.Component {
                 <audio id="beep">
                     <source src="https://goo.gl/65cBl1" type="audio/mpeg" />
                 </audio>
-                <div className="d-flex">
+                <div className="d-flex w-100 mt-5">
                     <ButtonView onClick={this.onStartPauseClick} 
                                 id="start_stop"
                                 value="" 
@@ -437,7 +437,7 @@ class ClockSettings extends React.Component {
 
     render() {
         return (
-            <div id="clock-sidebar" className="collapse">
+            <div id="clock-sidebar" className="collapse p-2">
                 <TimerSettingsView timerTypeLabel={getTimerLabel(SESSION_TIMER)} timerLength={this.props.sessionLength} handleChange={this.handleChangeSessionTimer} />
                 <TimerSettingsView timerTypeLabel={getTimerLabel(BREAK_TIMER)} timerLength={this.props.breakLength} handleChange={this.handleChangeBreakTimer} />
             </div>
