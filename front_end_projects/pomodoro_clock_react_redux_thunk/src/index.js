@@ -322,7 +322,7 @@ class Clock extends React.Component {
     }
 
     resetTimers = (callback = ()=>{}) => {
-        this.stopAlarm;
+        this.stopAlarm();
         this.setState({
             currentTimer: SESSION_TIMER,
             leftInSeconds: minutesToSeconds(this.props.sessionLength),
