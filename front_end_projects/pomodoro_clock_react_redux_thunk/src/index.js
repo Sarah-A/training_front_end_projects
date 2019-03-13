@@ -202,36 +202,34 @@ class TimerSettingsView extends React.Component {
     constructor(props) {
         super(props);
     }
-
+    
     render() {
         const timerTypeLabel = this.props.timerTypeLabel;
         const timerType = timerTypeLabel.charAt(0).toLowerCase() + timerTypeLabel.slice(1);
+        const incrementDecrementButton = (type, icon) => {
+            return (
+                <ButtonView onClick={this.onChangeClick} 
+                                    id = {`${timerType}-${type}`}
+                                    value={type} 
+                                    ariaLabel={`${type} timer`}
+                                    icon = {<i className={icon}></i>} />
+        );}
+
         return (
             <div>
                 <label id={`${timerType}-label`} htmlFor={`${timerType}-length`}>{timerTypeLabel} Length</label>
                 <div className="input-group">
                     <div className="input-group-prepend">
-                        <ButtonView onClick={this.onChangeClick} 
-                                    id = {`${timerType}-decrement`}
-                                    value="decrement" 
-                                    ariaLabel="decrement timer"
-                                    icon = {<i className="fas fa-angle-down"></i>} />
+                        {incrementDecrementButton("decrement", "fas fa-angle-down")}
                     </div>
                     <input type="text" id={`${timerType}-length`} className="form-control" value={this.props.timerLength} onChange={this.handleChange}></input>
                     <div className="input-group-append">
-                        <ButtonView onClick={this.onChangeClick} 
-                                    id = {`${timerType}-increment`}
-                                    value="increment" 
-                                    ariaLabel="increment timer"
-                                    icon = {<i className="fas fa-angle-up"></i>} />                                   
+                        {incrementDecrementButton("increment", "fas fa-angle-up")}                                                
                     </div>
                 </div>
             </div>
         );
     }
-
-    // setting: break 
-    // button: decrement , icon, handler
 
     onChangeClick = (value) => {
         console.log(`Up/Down Change Timer Button Clicked: ${value}`);
