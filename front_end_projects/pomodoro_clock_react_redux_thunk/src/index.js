@@ -272,8 +272,10 @@ class Clock extends React.Component {
             startPauseButtonIcon = <i className="fas fa-play"></i>
         }
 
+        const breakOnlyClass = this.state.currentTimer === BREAK_TIMER ? "break" : "";
+
         return (
-            <div id="clock" className="m-auto d-flex flex-column align-items-center">
+            <div id="clock" className={`m-auto d-flex flex-column align-items-center ${breakOnlyClass}`}>
                 <h1 id="timer-label">{getTimerLabel(this.state.currentTimer)}</h1>
                 <p className="h2" id="time-left">{timeLeftDisplay.minutes}:{timeLeftDisplay.seconds}</p>
                 <audio id="beep">
