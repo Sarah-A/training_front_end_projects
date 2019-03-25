@@ -236,15 +236,15 @@ class App extends React.Component {
 
         return (
         <div id="drum-machine" className="d-flex flex-column">       
-        <div id="drum-machine-title" className="h2 text-center">Drum Machine</div>
-        <div className="d-flex flex-column flex-lg-row align-items-center justify-content-around">
-            <div id="drum-pads" className="drum-panel row align-items-center justify-content-around w-100 w-lg-50">
-                {drumPadsComponents}            
+            <div id="drum-machine-title" className="h2 text-center">Drum Machine</div>
+            <div className="d-flex flex-column flex-lg-row align-items-center justify-content-around">
+                <div id="drum-pads" className="drum-panel row align-items-center justify-content-around w-100 w-lg-50">
+                    {drumPadsComponents}            
+                </div>
+                <div id="drum-display" className="drum-panel row w-100 w-lg-50">
+                    <ConnectedDisplay />            
+                </div>
             </div>
-            <div id="drum-display" className="drum-panel row w-100 w-lg-50">
-                <ConnectedDisplay />            
-            </div>
-        </div>
         </div>
         );
     }

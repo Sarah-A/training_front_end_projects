@@ -23,6 +23,29 @@ import Immutable from 'seamless-immutable';
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
+// accurateInterval library from: https://codepen.io/no_stack_dub_sack/pen/VKJGKd:
+//-----------------------------------------------------------------------------
+window.accurateInterval = function(time, fn) {
+    var cancel, nextAt, timeout, wrapper, _ref;
+    nextAt = new Date().getTime() + time;
+    timeout = null;
+    if (typeof time === 'function') _ref = [time, fn], fn = _ref[0], time = _ref[1];
+    wrapper = function() {
+      nextAt += time;
+      timeout = setTimeout(wrapper, nextAt - new Date().getTime());
+      return fn();
+    };
+    cancel = function() {
+      return clearTimeout(timeout);
+    };
+    setTimeout(wrapper, nextAt - new Date().getTime());
+    return {
+      cancel: cancel
+    };
+  };
+
+
+//-----------------------------------------------------------------------------
 // src/utils
 //-----------------------------------------------------------------------------
 
@@ -368,7 +391,7 @@ class Clock extends React.Component {
             this.handleTimerExpiry();
         }
 
-        setTimeout(this.onTimerTick, 1000);
+        accurateInterval(this.onTimerTick, 1000);
     }
 
     onTimerTick = () => {
