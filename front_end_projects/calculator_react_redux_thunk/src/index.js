@@ -420,7 +420,7 @@ class CalculatorInput extends React.Component {
     render() {
         
         const equalKey = new calculatorKey("Enter", "equals", "=", "col-12 bg-success");
-        const backspaceIcon = (<i class="fas fa-backspace"></i>);
+        const backspaceIcon = (<i className="fas fa-backspace"></i>);
         const backspaceKey = new calculatorKey("Backspace", "backspace", backspaceIcon, "w-100 bg-danger");
         const clearAllKey = new calculatorKey("Delete", "clear", "AC", "w-100 bg-danger");
         const decimalPointKey = new calculatorKey(".", "decimal", ".", "col-4 bg-light");
