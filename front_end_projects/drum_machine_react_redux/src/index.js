@@ -1,7 +1,22 @@
+// For CodePen:
+// const {createStore, combineReducers, applyMiddleware} = Redux;
+// const {Provider, connect } = ReactRedux;
+// const thunk = ReduxThunk.default;
+
+// For PC Environment:
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider, connect } from "react-redux";
 import { createStore } from "redux";
+
+//-----------------------------------------------------------------------------
+// Notes:
+//  * Since the project requires that I create this project as a codePen,
+//      I have to use only one .js file. Therefore, all the js code is in 
+//      this single file. However, in order to show the design, I use comments
+//      to show where every part of the code should be in a real project
+//-----------------------------------------------------------------------------
+
 
 //******************************************************************************************************************************//
 //      store.js                                                                                                                //
@@ -17,7 +32,7 @@ function PressPad(padKey) {
 }
 
 //-----------------------------------------------------------------------------------------------------------
-// DrumsData should probably be connected to the store but since I didn't learn the backend yet,
+// DrumsData should probably be connected to the backend database but since I didn't learn the backend yet,
 // I'm leaving it out now to simplify the solution.
 //-----------------------------------------------------------------------------------------------------------
 
@@ -142,7 +157,7 @@ function mapDispatchToProps(dispath) {
 //******************************************************************************************************************************//
 
 //---------------------------------------------------------------------
-// DrumPad
+// componenets/DrumPad
 //---------------------------------------------------------------------
 class DrumPad extends React.Component {
     constructor(props) {
@@ -201,7 +216,7 @@ $(window).keydown(function(e) {
 });
 
 //---------------------------------------------------------------------
-// Display
+// componenets/Display
 //---------------------------------------------------------------------
 class Display extends React.Component {
     constructor(props) {
@@ -220,7 +235,7 @@ class Display extends React.Component {
 
 
 //---------------------------------------------------------------------
-// App
+// App.js
 //---------------------------------------------------------------------
 class App extends React.Component {
     constructor(props) {
