@@ -1,0 +1,8 @@
+# for VSCode and React code:
+node_modules/
+.cache/
+dist/
+.env
+.DS_Store
+coverage/
+.vscode/

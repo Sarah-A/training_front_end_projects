@@ -1,0 +1,43 @@
+{
+    "env": {
+        "browser": true,
+        "node": true,
+        "es6": true
+    },
+    "extends":[ 
+        "eslint:recommended", // less opinionated set of rules
+        // to support react:
+        "plugin:import/errors",
+        "plugin:react/recommended",
+        "plugin:jsx-a11y/recommended",
+        // to support prettier:
+        "prettier"
+    ],
+    "rules": {
+        "react/prop-types": 0,
+        // "react/react-in-jsx-scope": 0 is new since you used to have to import React everywhere but now with the recent revision of React you don't need to. 0 means off. Can also use false instead.
+        "react/react-in-jsx-scope": 0
+      },
+    /* The import plugin helps ESLint catch commons bugs around imports, exports, and modules in general
+        jsx-a11y catches many bugs around accessibility that can accidentally arise using React, like not having an alt attribute on an img tag.
+        react is mostly common React bugs like not calling one of your props children.
+    */
+    "plugins": ["react", "import", "jsx-a11y"],
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
+    "parserOptions": {
+        "ecmaVersion": 2021,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true
+        }        
+    },
+    "settings": {
+        // eslint-plugin-react now requires you to inform of it what version of React you're using. We're telling it here to look at the package.json to figure it out.
+        "react": {
+          "version": "detect"
+        }
+    }   
+}
