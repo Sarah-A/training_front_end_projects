@@ -1,10 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Pet from "./Pet";
 
 const ANIMALS = ["bird", "cat", "dog", "rabbit", "reptile"];
 
 const SearchParams = () => {
   const [animal, updateAnimal] = useState("");
   const [location, updateLocation] = useState("");
+  const [breed, updateBreed] = useState("");
+  const [pets, setPets] = useState([]);
+  const breeds = [];
+
+  // useEffect is called when this component is first called.
+  // after that, it will be called, every time one of the parameters in the list
+  // change.
+  useEffect(() => {
+    requestPets();
+  }, [animal, location, breed]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  async function requestPets() {
+    const res = await fetch(
+      `http://pets-v2.dev-apis.com/pets?animal=${animal}&location=${location}&breed=${breed}`
+    );
+    const json = await res.json();
+
+    setPets(json.pets);
+  }
 
   return (
     <div className="search-params">
@@ -34,8 +54,16 @@ const SearchParams = () => {
             ))}
           </select>
         </label>
-        <button disabled="true">Submit</button>
+        <button>Submit</button>
       </form>
+      {pets.map((pet) => (
+        <Pet
+          name={pet.name}
+          animal={pet.animal}
+          breed={pet.breed}
+          key={pet.id}
+        />
+      ))}
     </div>
   );
 };
