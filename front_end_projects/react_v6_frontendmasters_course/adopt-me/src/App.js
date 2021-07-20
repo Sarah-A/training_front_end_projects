@@ -1,3 +1,4 @@
+import { StrictMode } from "react";
 import ReactDOM from "react-dom";
 import SearchParams from "./SearchParams";
 
@@ -10,4 +11,11 @@ const App = () => {
   );
 };
 
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(
+  // StrictMode makes sure that we're following React's core team recommended conventions.
+  // Usually very recommended to work ONLY in strict mode.
+  <StrictMode>
+    <App />
+  </StrictMode>,
+  document.getElementById("root")
+);
