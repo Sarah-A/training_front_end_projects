@@ -1,6 +1,7 @@
 import { Component } from "react";
 import { withRouter } from "react-router-dom";
 import Carousel from "./Carousel";
+import ErrorBoundary from "./ErrorBoundary";
 
 class Details extends Component {
   state = { loading: true };
@@ -23,6 +24,10 @@ class Details extends Component {
     const { animal, breed, city, state, description, name, images } =
       this.state;
 
+    // To test that our error handling works as expected:
+    // uncomment the next line and restart the server:
+    // throw new Error("This is a new error!!");
+
     return (
       <div className="details">
         <Carousel images={images} />
@@ -39,4 +44,12 @@ class Details extends Component {
 
 // withRouter is required for this componenet to receive the path-related variable
 // (in this instance, the id)
-export default withRouter(Details);
+const DetailsWithRouter = withRouter(Details);
+
+export default function DetailsWithErrorBoundry(props) {
+  return (
+    <ErrorBoundary>
+      <DetailsWithRouter {...props} />
+    </ErrorBoundary>
+  );
+}
