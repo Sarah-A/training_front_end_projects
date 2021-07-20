@@ -24,6 +24,7 @@
         react is mostly common React bugs like not calling one of your props children.
     */
     "plugins": ["react", "import", "jsx-a11y"],
+    "parser": "@babel/eslint-parser",
     "globals": {
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly"

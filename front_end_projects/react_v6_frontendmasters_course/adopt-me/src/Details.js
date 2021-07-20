@@ -4,6 +4,8 @@ import { withRouter } from "react-router-dom";
 class Details extends Component {
   state = { loading: true };
 
+  // componentDidMount is called only once by React, after the component renders for the 1st time.
+  // This is usually where you'll do data fetching and processing before displaying it.
   async componentDidMount() {
     const res = await fetch(
       `http://pets-v2.dev-apis.com/pets?id=${this.props.match.params.id}`
@@ -17,8 +19,7 @@ class Details extends Component {
       return <h2>loading … </h2>;
     }
 
-    const { animal, breed, city, state, description, name, images } =
-      this.state;
+    const { animal, breed, city, state, description, name } = this.state;
 
     return (
       <div className="details">
@@ -33,4 +34,6 @@ class Details extends Component {
   }
 }
 
+// withRouter is required for this componenet to receive the path-related variable
+// (in this instance, the id)
 export default withRouter(Details);

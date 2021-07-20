@@ -5,7 +5,12 @@
         {
           "runtime": "automatic"
         }
-      ]
-    ]
+      ],
+      // A preset is just a group of plugins, grouped together for convenience. env is a particularly good one you should expect to normally use. 
+      "@babel/preset-env"
+    ],
+    // Babel's core concept is a plugin. Every transformation it can perform is encapsulated into a plugin. 
+    // Here we're including one explicitly: transform-class-properties.     
+    "plugins": ["@babel/plugin-proposal-class-properties"]
 }
   
