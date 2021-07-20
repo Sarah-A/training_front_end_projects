@@ -12,11 +12,11 @@ const SearchParams = () => {
   const [breeds] = useBreedList(animal);
 
   // useEffect is called when this component is first called.
-  // after that, it will be called, every time one of the parameters in the list
-  // change.
+  // after that, it's not called again (empty list) since we'll be calling
+  // requestPets() directly in our form's Submit callback function.
   useEffect(() => {
     requestPets();
-  }, [animal, location, breed]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function requestPets() {
     const res = await fetch(
@@ -29,7 +29,15 @@ const SearchParams = () => {
 
   return (
     <div className="search-params">
-      <form>
+      <form
+        onSubmit={(e) => {
+          // prevent the page from re-loading which is the default operation for onSubmit.
+          // this is because we use React and we want it to only update the components that changed
+          // rather than the whole page.
+          e.preventDefault();
+          requestPets();
+        }}
+      >
         <label htmlFor="location">
           Location
           <input
