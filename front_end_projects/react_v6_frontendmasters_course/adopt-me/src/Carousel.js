@@ -6,7 +6,8 @@ class Carousel extends Component {
   };
 
   // defaultProps defines what's the fallback if there are no images returned.
-  // It must be static.
+  // This allows us to always assume that we get something back so we don't need to check for values.
+  // Note: defaultProps must be static.
   static defaultProps = {
     images: ["http://pets-images.dev-apis.com/pets/none.jpg"],
   };
