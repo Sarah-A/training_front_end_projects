@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import useBreedList from "./useBreedList";
 import Pet from "./Pet";
 
 const ANIMALS = ["bird", "cat", "dog", "rabbit", "reptile"];
@@ -8,7 +9,7 @@ const SearchParams = () => {
   const [location, updateLocation] = useState("");
   const [breed, updateBreed] = useState("");
   const [pets, setPets] = useState([]);
-  const breeds = [];
+  const [breeds] = useBreedList(animal);
 
   // useEffect is called when this component is first called.
   // after that, it will be called, every time one of the parameters in the list
@@ -50,6 +51,22 @@ const SearchParams = () => {
             {ANIMALS.map((animal) => (
               <option key={animal} value={animal}>
                 {animal}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label htmlFor="breed">
+          Breed
+          <select
+            id="breed"
+            value={breed}
+            onChange={(e) => updateBreed(e.target.value)}
+            onBlur={(e) => updateBreed(e.target.value)}
+          >
+            <option />
+            {breeds.map((breed) => (
+              <option key={breed} value={breed}>
+                {breed}
               </option>
             ))}
           </select>
