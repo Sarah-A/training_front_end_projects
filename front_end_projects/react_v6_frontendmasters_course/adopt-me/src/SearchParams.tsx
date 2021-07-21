@@ -1,15 +1,16 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, FunctionComponent } from "react";
 import ThemeContext from "./ThemeContext";
 import useBreedList from "./useBreedList";
 import Results from "./Results";
+import { Animal, Pet, PetAPIResponse } from "./APIResponseTypes";
 
-const ANIMALS = ["bird", "cat", "dog", "rabbit", "reptile"];
+const ANIMALS: Animal[] = ["bird", "cat", "dog", "rabbit", "reptile"];
 
-const SearchParams = () => {
-  const [animal, updateAnimal] = useState("");
+const SearchParams: FunctionComponent = () => {
+  const [animal, updateAnimal] = useState("" as Animal);
   const [location, updateLocation] = useState("");
   const [breed, updateBreed] = useState("");
-  const [pets, setPets] = useState([]);
+  const [pets, setPets] = useState([] as Pet[]);
   const [breeds] = useBreedList(animal);
   // connect theme and setTheme to the ThemeContext Consumer:
   const [theme, setTheme] = useContext(ThemeContext);
@@ -18,14 +19,14 @@ const SearchParams = () => {
   // after that, it's not called again (empty list) since we'll be calling
   // requestPets() directly in our form's Submit callback function.
   useEffect(() => {
-    requestPets();
+    void requestPets();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function requestPets() {
     const res = await fetch(
       `http://pets-v2.dev-apis.com/pets?animal=${animal}&location=${location}&breed=${breed}`
     );
-    const json = await res.json();
+    const json = (await res.json()) as PetAPIResponse;
 
     setPets(json.pets);
   }
@@ -38,7 +39,7 @@ const SearchParams = () => {
           // this is because we use React and we want it to only update the components that changed
           // rather than the whole page.
           e.preventDefault();
-          requestPets();
+          void requestPets();
         }}
       >
         <label htmlFor="location">
@@ -55,8 +56,8 @@ const SearchParams = () => {
           <select
             id="animal"
             value={animal}
-            onChange={(e) => updateAnimal(e.target.value)}
-            onBlur={(e) => updateAnimal(e.target.value)}
+            onChange={(e) => updateAnimal(e.target.value as Animal)}
+            onBlur={(e) => updateAnimal(e.target.value as Animal)}
           >
             <option />
             {ANIMALS.map((animal) => (

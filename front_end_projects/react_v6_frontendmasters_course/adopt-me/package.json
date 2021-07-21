@@ -7,8 +7,10 @@
     "dev": "parcel src/index.html",
     "prod": "parcel build src/index.html",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "prettier --write \"src/**/*.{js,jsx}\"",
-    "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\" --quiet"
+    "format": "prettier --write \"src/**/*.{js,jsx, ts, tsx}\"",
+    "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\" --quiet",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit" 
   },
   "keywords": [],
   "author": "",

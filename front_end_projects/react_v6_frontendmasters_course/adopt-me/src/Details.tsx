@@ -1,12 +1,25 @@
-import { Component } from "react";
-import { withRouter } from "react-router-dom";
+import { Component, FunctionComponent } from "react";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 import Carousel from "./Carousel";
 import ErrorBoundary from "./ErrorBoundary";
 import ThemeContext from "./ThemeContext";
 import Modal from "./Modal";
+import { Animal, PetAPIResponse } from "./APIResponseTypes";
 
-class Details extends Component {
-  state = { loading: true, showModal: false };
+// Note - since Details is used with Route and it receives an id (see in App.js),
+// we need to add the following type definition to it:
+class Details extends Component<RouteComponentProps<{ id: string }>> {
+  state = {
+    loading: true,
+    animal: "" as Animal,
+    breed: "",
+    city: "",
+    state: "",
+    description: "",
+    name: "",
+    images: [] as string[],
+    showModal: false,
+  };
 
   // componentDidMount is called only once by React, after the component renders for the 1st time.
   // This is usually where you'll do data fetching and processing before displaying it.
@@ -14,7 +27,7 @@ class Details extends Component {
     const res = await fetch(
       `http://pets-v2.dev-apis.com/pets?id=${this.props.match.params.id}`
     );
-    const json = await res.json();
+    const json = (await res.json()) as PetAPIResponse;
     this.setState(Object.assign({ loading: false }, json.pets[0]));
   }
 
@@ -22,7 +35,7 @@ class Details extends Component {
 
   // We're using a simple window.location redirect since we're heading off site.
   // This is bad accessibility so you should be extra cautious when doing this!
-  adopt = () => (window.location = "http://bit.ly/pet-adopt");
+  adopt = () => (window.location.href = "http://bit.ly/pet-adopt");
 
   render() {
     if (this.state.loading) {
@@ -74,10 +87,13 @@ class Details extends Component {
 // (in this instance, the id)
 const DetailsWithRouter = withRouter(Details);
 
-export default function DetailsWithErrorBoundry(props) {
-  return (
-    <ErrorBoundary>
-      <DetailsWithRouter {...props} />
-    </ErrorBoundary>
-  );
-}
+const DetailsErrorBoundary: FunctionComponent =
+  function DetailsErrorBoundary() {
+    return (
+      <ErrorBoundary>
+        <DetailsWithRouter />
+      </ErrorBoundary>
+    );
+  };
+
+export default DetailsErrorBoundary;
