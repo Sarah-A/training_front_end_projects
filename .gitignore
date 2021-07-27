@@ -3,3 +3,5 @@ node_modules/
 /front_end_sandbox/online_tutorial_sources
 /front_end_projects/calculator_react_redux_thunk/src/styles/default.css
 /front_end_projects/pomodoro_clock_react_redux_thunk/src/styles/default.css
+*.jsx
+front_end_projects/react_v6_frontendmasters_course/adopt-me/src/APIResponseTypes.js

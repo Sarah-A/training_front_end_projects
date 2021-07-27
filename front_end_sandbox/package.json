@@ -9,5 +9,8 @@
     ],
     "sourceMaps": true,
     "retainLines": true
+  },
+  "dependencies": {
+    "typescript": "^4.3.5"
   }
 }

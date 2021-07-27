@@ -2,7 +2,8 @@
     "env": {
         "browser": true,
         "node": true,
-        "es6": true
+        "es6": true,
+        "jest/globals": true    // this is requires for eslint to recognised jest global functions etc.
     },
     "extends":[ 
         "eslint:recommended", // less opinionated set of rules
@@ -11,8 +12,11 @@
         "plugin:react/recommended",
         "plugin:jsx-a11y/recommended",
         "plugin:react-hooks/recommended",
+        // to support typescript:
         "plugin:@typescript-eslint/recommended",
         "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        // to support jest:
+        "plugin:jest/recommended",
         // to support prettier:
         "prettier"
     ],
